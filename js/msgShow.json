@@ -1,0 +1,270 @@
+[
+	{
+	  "id": 0,
+	  "msg": "Erro ao se cadastrar, nome de usuário ou E-Mail já existe!"
+	},
+	{
+	  "id": 1,
+	  "msg": "Preencha todos os campos!"
+	},
+	{
+	  "id": 2,
+	  "msg": "Senhas não conferem!"
+	},
+	{
+	  "id": 3,
+	  "msg": "Email/Usuário ou Senha Incorretos"
+	},
+	{
+	  "id": 4,
+	  "msg": "Email já cadastrado"
+	},
+	{
+	  "id": 5,
+	  "msg": "Erro ao registrar no banco de dados. erro 005"
+	},
+	{
+	  "id": 6,
+	  "msg": "CPF/CNPJ já cadastrado"
+	},
+	{
+	  "id": 7,
+	  "msg": " --  -- "
+	},
+	{
+	  "id": 8,
+	  "msg": "Seu nome precisa ter no mínimo 2 caracteres"
+	},
+	{
+	  "id": 9,
+	  "msg": "Seu login precisa ter no mínimo 4 caracteres sem espaço"
+	},
+	{
+	  "id": 10,
+	  "msg": "Sua senha precisa ter no mínimo 8 caracteres"
+	},
+	{
+	  "id": 11,
+	  "msg": "Digite um CPF válido"
+	},
+	{
+	  "id": 12,
+	  "msg": "Selecione ao menos um estado & cidade"
+	},
+	{
+	  "id": 13,
+	  "msg": "CNPJ não foi encontrado no cadastro da Receita Federal"
+	},
+	{
+	  "id": 14,
+	  "msg": "Servidor recebeu muitas requisições de CNPJ, aguarde um minuto e tente novamente. erro 014"
+	},
+	{
+	  "id": 15,
+	  "msg": "Conta criada com sucesso!"
+	},
+	{
+	  "id": 16,
+	  "msg": "Dados alterados com sucesso!"
+	},
+	{
+	  "id": 17,
+	  "msg": "Cartão de descarte adicionado com sucesso!"
+	},
+	{
+	  "id": 18,
+	  "msg": "Erro ao adicionar cartão de descarte. erro 018"
+	},
+	{
+	  "id": 19,
+	  "msg": "Você tem uma nova notificação!"
+	},
+	{
+	  "id": 20,
+	  "msg": "A quantia não pode ser zero"
+	},
+	{
+	  "id": 21,
+	  "msg": "E-Mail, CPF ou CNPJ digitado não pôde ser encontrado"
+	},
+	{
+	  "id": 22,
+	  "msg": "Um e-mail de recuperação foi enviado ao seu endereço de email"
+	},
+	{
+	  "id": 23,
+	  "msg": "Código inválido ou expirou, acesso negado. erro 023"
+	},
+	{
+	  "id": 24,
+	  "msg": "Senha alterada com sucesso!"
+	},
+	{
+	  "id": 25,
+	  "msg": "Você tem uma nova notificação"
+	},
+	{
+	  "id": 26,
+	  "msg": "Digite um CNPJ válido"
+	},
+	{
+	  "id": 27,
+	  "msg": "Digite um e-mail válido"
+	},
+	{
+	  "id": 28,
+	  "msg": "Digite um nome válido"
+	},
+	{
+	  "id": 29,
+	  "msg": "Fique atento as suas observações,<br>você pode ser permanentemente banido da plataforma"
+	},
+	{
+	  "id": 30,
+	  "msg": "Você precisa completar o seu cadastro primeiro, clique aqui para faze-lo!"
+	},
+	{
+	  "id": 31,
+	  "msg": "A sua conta foi desativada por um administrador, entre em contato para saber mais: "
+	},
+	{
+	  "id": 32,
+	  "msg": "Tem certeza que deseja remover o seu Cartão de Descarte?"
+	},
+	{
+	  "id": 33,
+	  "msg": "Digite um CEP válido"
+	},
+	{
+	  "id": 34,
+	  "msg": "O nome de usuário "
+	},
+	{
+	  "id": 35,
+	  "msg": "O email "
+	},
+	{
+	  "id": 36,
+	  "msg": "Observação atualizada com sucesso!"
+	},
+	{
+	  "id": 37,
+	  "msg": "Preencha o campo de senha atual"
+	},
+	{
+	  "id": 38,
+	  "msg": "Senha atual incorreta!"
+	},
+	{
+	  "id": 39,
+	  "msg": "Este CEP não pertence a esta cidade"
+	},
+	{
+	  "id": 40,
+	  "msg": "Preencha todos os campos para poder alterar a senha"
+	},
+	{
+	  "id": 41,
+	  "msg": "Conta deletada com sucesso!"
+	},
+	{
+	  "id": 42,
+	  "msg": "Senha incorreta!"
+	},
+	{
+	  "id": 43,
+	  "msg": "Cartão de descarte excluído com sucesso!"
+	},
+	{
+	  "id": 44,
+	  "msg": "Erro ao excluir cartão de descarte!. erro 044"
+	},
+	{
+	  "id": 45,
+	  "msg": "Quantidade máxima de cartões de descarte atingida!"
+	},
+	{
+	  "id": 46,
+	  "msg": "Agenda adicionada com sucesso!"
+	},
+	{
+	  "id": 47,
+	  "msg": "Limite de agendas atingido.<br>Desbloquei a criação de agendas com a versão premium!"
+	},
+	{
+	  "id": 48,
+	  "msg": "Configure a hora inicial e final da coleta"
+	},
+	{
+	  "id": 49,
+	  "msg": "Configure o dia em que será realizado a coleta"
+	},
+	{
+	  "id": 50,
+	  "msg": "Agenda configurada com sucesso!"
+	},
+	{
+	  "id": 51,
+	  "msg": "Agenda excluída com sucesso!"
+	},
+	{
+	  "id": 52,
+	  "msg": "Falha ao excluir agenda. erro 052"
+	},
+	{
+	  "id": 53,
+	  "msg": "Solicitação enviada com sucesso!"
+	},
+	{
+	  "id": 54,
+	  "msg": "Impossível excluir cartões em processo de descarte!<br>Cancele a coleta agendada para poder prosseguir."
+	},
+	{
+	  "id": 55,
+	  "msg": "<span class=text-dark>Configure seus locais de atuação em<br>configurações > Informações</span>"
+	},
+	{
+	  "id": 56,
+	  "msg": "Impossível configurar agenda contendo coletas pendentes."
+	},
+	{
+	  "id": 57,
+	  "msg": "Impossível excluir agenda contendo coletas pendentes."
+	},
+	{
+	  "id": 58,
+	  "msg": "Erro ao enviar, servidor SMTP indisponível. erro 058"
+	},
+	{
+	  "id": 59,
+	  "msg": "Impossível excluir conta com agendas pendentes."
+	},
+	{
+	  "id": 60,
+	  "msg": "Não foi possível consultar o servidor de censuras. erro 060"
+	},
+	{
+	  "id": 61,
+	  "msg": "Agendamento cancelado com sucesso"
+	},
+	{
+	  "id": 62,
+	  "msg": "Coleta agendada com sucesso"
+	},
+	{
+	  "id": 63,
+	  "msg": "Agenda cheia"
+	},
+	{
+	  "id": 64,
+	  "msg": "Adquira a versão premium para obter mais locais de atuação"
+	},
+	{
+	  "id": 65,
+	  "msg": "Coleta concluída com sucesso!"
+	},
+	{
+	  "id": 66,
+	  "msg": "Existem agendas utilizando esta atuação!"
+	}
+]

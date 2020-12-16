@@ -1,0 +1,657 @@
+<?php
+    include_once 'configuracao.php';
+    session_start();
+
+
+function cadastrarUsuario($login, $email, $senha, $tipo, $nome, $cpf_cnpj, $estado, $cidade) {
+    include 'configuracao.php';
+
+    $everythingIsOk = false;
+
+    // limpa o CPF ou CNPJ retira os symb
+    $cpf_cnpj = str_replace(".", "", $cpf_cnpj);
+    $cpf_cnpj = str_replace("-", "", $cpf_cnpj);
+    $cpf_cnpj = str_replace("/", "", $cpf_cnpj);
+
+    // deixa o login em lowercase
+    $login = mb_convert_case($login, MB_CASE_LOWER, "UTF-8");
+    
+    // limpa as strings de possíveis SQL injections
+    $login = mysqli_real_escape_string($conectar, $login);
+    $email = mysqli_real_escape_string($conectar, $email);
+    $nome = mysqli_real_escape_string($conectar, $nome);
+    $cpf_cnpj = mysqli_real_escape_string($conectar, $cpf_cnpj);
+    $cidade = mysqli_real_escape_string($conectar, $cidade);
+    $estado = mysqli_real_escape_string($conectar, $estado);
+    $bairro = $rua = $numero = $complemento = $cep = $telefone = "";
+
+    // criptografa a senha
+    $senha = crypts($senha);
+    
+    // pega data atual
+    $data = currentDate();
+    
+    // verifica se o nome digitado tem palavrões, se sim, retorna, se nao continua
+    $arrayNome = verifyBadWords($nome);
+    $isBad = $arrayNome['bad'];
+    if ($isBad) {
+        $result = array(
+            "code" => 6,
+        );
+        return $result;
+    }
+
+    // query pra verificar se ja existe usuario com o email ou login inserido
+    $sql = ("SELECT cd_usuario FROM tb_logins WHERE ds_email = '$email' OR nm_login = '$login'");
+    $query = mysqli_query($conectar, $sql);
+    $count = mysqli_num_rows($query);
+    if ($count > 0) {
+        $result = array(
+            "code" => 1,
+        );
+        return $result;
+    } else {
+        // verifica se existe um usuario com o cpf ou cnpj inserido na tabela empresa de descarte
+        $sql = ("SELECT cd_usuario FROM tb_usuarios WHERE cd_cpf_cnpj = '$cpf_cnpj'");
+        $query = mysqli_query($conectar, $sql);
+        $count = mysqli_num_rows($query);
+        if ($count > 0) {
+            $result = array(
+                "code" => 3,
+            );
+            return $result;
+        } else {
+            $sql = ("SELECT MAX(cd_usuario) FROM tb_usuarios");
+            $query = mysqli_query($conectar, $sql);
+            $row = mysqli_fetch_array($query);
+            $new_id = $row[0];
+            $new_id++;
+
+            switch ($tipo) {
+                case 0: case 2:
+                    $obj = cnpjInfo($cpf_cnpj);
+                    $status = $obj->status;
+                    if ($status == "OK") {
+                        //$nomearr = explode(" ", $obj->nome);
+                        //$nome = $nomearr[0];
+                        $nome = $obj->nome;
+                        $nome = mb_convert_case($nome, MB_CASE_LOWER, "UTF-8");
+                        $nome = ucwords($nome);
+                        $telefone = $obj->telefone;
+                        $estado = $convertUf[$obj->uf];
+                        $cidade = $obj->municipio;
+                        $bairro = $obj->bairro;
+                        $rua = $obj->logradouro;
+                        $numero = $obj->numero;
+                        $complemento = $obj->complemento;
+                        $cep = $obj->cep;
+                        $cep = str_replace(".","", $cep);
+                        $cep = str_replace("-","", $cep);
+                        $cidade = mb_convert_case($cidade, MB_CASE_LOWER, "UTF-8");
+                        $cidade = ucwords($cidade);
+                        $cidade = str_replace("-", " ", $cidade);
+                        $cidade = mysqli_real_escape_string($conectar, $cidade);
+                        $bairro = mysqli_real_escape_string($conectar, $bairro);
+                        $rua = mysqli_real_escape_string($conectar, $rua);
+                        $complemento = mysqli_real_escape_string($conectar, $complemento);
+                        $estado = localeToCode($estado, 'estado');
+                        $cidade = localeToCode($cidade, 'cidade');
+                        $everythingIsOk = true;
+                    } else if ($status == "MR") {
+                        // retorna erro 4 caso a API receba muitas requests de validação de CNPJ e retorne MR (many requests)
+                        $result = array(
+                            "code" => 4,
+                        );
+                        return $result;
+                    } else {
+                        // retorna erro 2 caso o status do CNPJ não seja OK
+                        $result = array(
+                            "code" => 2,
+                        );
+                        return $result;
+                    }
+                break;
+                case 1:
+                    $cidade = strMunicipio($cidade);
+                    $cidade = mb_convert_case($cidade, MB_CASE_LOWER, "UTF-8");
+                    $cidade = ucwords($cidade);
+                    $cidade = str_replace("-", " ", $cidade);
+                    $estado = localeToCode($estado, 'estado');
+                    $cidade = localeToCode($cidade, 'cidade');
+                    $everythingIsOk = true;
+                break;
+            }
+            if ($everythingIsOk) {
+                // query das inserções nas tabelas pra um novo usuário
+                $sqlLogins = ("INSERT INTO tb_logins (cd_usuario, nm_login, ds_email, cd_senha) VALUES ('$new_id', '$login', '$email', '$senha')");
+                $sqlUsuarios = ("INSERT INTO tb_usuarios (cd_usuario, nm_usuario, ds_telefone, cd_cpf_cnpj, cd_tipo, dt_criacao, cd_qt_notify, qt_advertence, ic_desativado) VALUES ('$new_id', '$nome', '$telefone', '$cpf_cnpj', '$tipo', '$data', '0', '0', '0')");
+                $sqlEnderecos = ("INSERT INTO tb_enderecos (cd_usuario, cd_estado, cd_cidade, ds_bairro, ds_rua, ds_numero, ds_complemento, ds_cep) VALUES ('$new_id', '$estado', '$cidade', '$bairro', '$rua', '$numero', '$complemento', '$cep')");
+                $sqlConfigs = ("INSERT INTO tb_configs (cd_usuario, ds_theme, ic_premium, qt_material, qt_nivel) VALUES ('$new_id', '0', '0', '0', '1')");
+                enviarNotify(0, $new_id, 0, 0, '4');
+                                        
+                if(!mysqli_query($conectar, $sqlLogins)) return 5; // retorna erro 5 caso não consiga fazer a inserção
+                if(!mysqli_query($conectar, $sqlUsuarios)) return 5;
+                if(!mysqli_query($conectar, $sqlEnderecos)) return 5;
+                if(!mysqli_query($conectar, $sqlConfigs)) return 5;
+
+                $result = array(
+                    "code" => 0,
+                    "currentId" => $new_id,
+                );
+                return $result;
+            }
+        }
+    }
+}
+
+function enviarNotify($agenda, $destinatario, $remetente, $descarte, $notify_type) {
+    include 'configuracao.php';
+    $data = currentDate('time');
+    $sqlNum = "SELECT MAX(cd_notify) FROM tb_notify";
+    $queryNum = mysqli_query($conectar, $sqlNum);
+    $rowNum = mysqli_fetch_array($queryNum);
+    $new_id = $rowNum[0];
+    $new_id++;
+    $sql = "INSERT INTO tb_notify (cd_notify, cd_agenda, cd_destinatario, cd_remetente, cd_descarte, cd_notify_type, ic_new_notify, dt_emissao) VALUES ('$new_id', '$agenda', '$destinatario', '$remetente', '$descarte', '$notify_type', '1', '$data')";
+    mysqli_query($conectar, $sql);
+}
+
+
+// função pra retirar acentuações de strings
+function strMunicipio($str) {
+    $from = "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ";
+    $to = "aaaaeeiooouucAAAAEEIOOOUUC";
+    $keys = array();
+    $values = array();
+    preg_match_all('/./u', $from, $keys);
+    preg_match_all('/./u', $to, $values);
+    $mapping = array_combine($keys[0], $values[0]);
+    $stringupp = strtr($str, $mapping);
+    $stringupp = strtoupper($stringupp);
+    return $stringupp;
+}
+
+// função criada pra usar a API do receitaWS
+function cnpjInfo($cnpj) {
+    // CNPJ_TESTE: 06990590000123
+    // ini_set('display_errors',0);
+    $api_url = 'https://www.receitaws.com.br/v1/cnpj/'.$cnpj;
+    if ($jsonEnc = file_get_contents($api_url))
+        $jsonDec = json_decode($jsonEnc);
+    else
+        $jsonDec = (object)['status'=>'MR'];
+    return $jsonDec;
+}
+
+
+// função pra criptografar as badwords
+function convertBadTags($id){
+    include 'configuracao.php';
+    if (!file_exists("$id")) {
+        copy($collectorApi.$id, "$id");
+    }
+    $badwords = (array) include "$id";
+    if (!file_exists('badwords.hash')) {
+        $badkeys = "<?php return array (";
+        for ($i=0; $i < count($badwords); $i++) {
+            $badkey = crypts($badwords[$i]);
+            $badkeys .= "'".$badkey."',";
+        }
+        $badkeys .= ");?>";
+        $fp = fopen("badwords.hash","wb");
+        fwrite($fp, $badkeys);
+        fclose($fp);
+    }
+    unlink("$id");
+    return $badwords;
+}
+
+// função pra verificar se tem uma badword numa string, retorna um array contendo true or false, e a string convertida com asteriscos
+function verifyBadWords($words) {
+    $isBad = false;
+    $badwords = convertBadTags('U2jy55Zv');
+    $words = mb_convert_case($words, MB_CASE_LOWER, "UTF-8");
+    for ($i=0; $i < count($badwords); $i++) {
+        $pos = strpos($words, $badwords[$i]);
+        while($pos !== false) {
+            for($j = $pos; $j < $pos + strlen($badwords[$i]); $j++)
+                $words[$j]="*";
+            $isBad = true;
+            $pos = strpos($words, $badwords[$i]);
+        }
+    }
+    $infoArr = array(
+        "words" => $words,
+        "bad" => $isBad,
+    );
+    return $infoArr;
+}
+
+// encripta senhas, mas to usando pra encriptar varias coisas 
+function crypts($senha) {
+    $senha = hash('sha3-256', $senha);
+    return $senha;
+}
+
+// função pra logar
+function logar($login, $senha) {
+    include 'configuracao.php';
+    
+    $login = mysqli_real_escape_string($conectar, $login);
+    $login = mb_convert_case($login, MB_CASE_LOWER, "UTF-8");
+    $senha = crypts($senha);
+    
+    $sql = "SELECT cd_usuario FROM tb_logins WHERE ds_email = '$login' AND cd_senha = '$senha' OR nm_login = '$login' AND cd_senha = '$senha'";
+    $query = mysqli_query($conectar, $sql);
+    $row = mysqli_num_rows($query);
+    if ($row > 0) {
+        $row = mysqli_fetch_array($query);
+        $userId = $row['cd_usuario'];
+        $sql = "SELECT cd_usuario, cd_tipo, ic_desativado, nm_usuario FROM tb_usuarios WHERE cd_usuario = '$userId'";
+        $query = mysqli_query($conectar, $sql);
+        $row = mysqli_fetch_array($query);
+        $desativado = $row['ic_desativado'];
+        if ($desativado == 1) {
+            $result = array(
+                "code" => 1,
+            );
+            return $result;
+        } else {
+            $_SESSION['sessao'] = $row['cd_usuario'];
+            $_SESSION['cd_tipo'] = $row['cd_tipo'];
+            $_SESSION['nm_usuario'] = $row['nm_usuario'];
+
+            $result = array(
+                "id" => $row['cd_usuario'],
+                "code" => 0,
+            );
+            return $result;
+        }
+    } else {
+        $result = array(
+            "code" => 2,
+        );
+        return $result;
+    }
+}
+
+// função que pega a data atual com ou sem as horas
+function currentDate($time = "") {
+    $gmt = -3;
+    if ($time == 'time') {
+        return gmdate("Y-m-d H:i:s", time() + 3600*($gmt+date("I")));
+    } else {
+        return gmdate("Y-m-d", time() + 3600*($gmt+date("I")));
+    }
+}
+
+// função que inverte a data recebida do banco de dados
+function inverteData($data){
+    if(count(explode("/",$data)) > 1){
+        return implode("-",array_reverse(explode("/",$data)));
+    }elseif(count(explode("-",$data)) > 1){
+        return implode("/",array_reverse(explode("-",$data)));
+    }
+}
+
+function notifyDateTime($dateTime){
+    $data = explode(" ", $dateTime);
+    $calen = $data[0];
+    $hor = $data[1];
+
+    $hor = explode(":", $hor);
+    $hora = $hor[0];
+    $minuto = $hor[1];
+    $segundo = $hor[2];
+
+    $calen = explode("-",$calen);
+    $ano = $calen[0];
+    $mes = $calen[1];
+    $dia = $calen[2];
+
+    $dateTime = "$dia/$mes/$ano às $hora:$minuto:$segundo";
+
+    return $dateTime;
+}
+
+// função que deixa a string contendo o nome da cidade visivelmente mais bonita
+// serve também para a pesquisa de preenchimento das configs de cidade e estados darem match
+function cidadeViewSlash($cidade) {
+    $cidade = mb_convert_case($cidade, MB_CASE_LOWER, "UTF-8");
+    $cidade = str_replace("-", " ", $cidade);
+    $cidade = str_replace("\\", "", $cidade);
+    $cidade = ucwords($cidade);
+
+    $cidadePalavra = explode(" ", $cidade);
+    $ct=0;
+    foreach($cidadePalavra as $palavra) {
+        $ct++;
+        if ($palavra == 'Da' || $palavra == 'De' || $palavra == 'E' || $palavra == 'Dos' || $palavra == 'Das' || $palavra == 'Do') {
+            $cidadePalavra[$ct-1] = strtolower($palavra);
+        }
+    }
+    $cidade = implode(" ", $cidadePalavra);
+    return $cidade;
+}
+
+function cidadeView($cidade) {
+    $cidade = mb_convert_case($cidade, MB_CASE_LOWER, "UTF-8");
+    $cidade = str_replace("-", " ", $cidade);
+    $cidade = ucwords($cidade);
+
+    $cidadePalavra = explode(" ", $cidade);
+    $ct=0;
+    foreach($cidadePalavra as $palavra) {
+        $ct++;
+        if ($palavra == 'Da' || $palavra == 'De' || $palavra == 'E' || $palavra == 'Dos' || $palavra == 'Das' || $palavra == 'Do') {
+            $cidadePalavra[$ct-1] = strtolower($palavra);
+        }
+    }
+    $cidade = implode(" ", $cidadePalavra);
+    return $cidade;
+}
+
+function codeToLocale($code, $type) {
+    include 'configuracao.php';
+    switch ($type) {
+        case 'estado':
+            $sql = "SELECT nm_estado FROM tb_estados WHERE cd_estado = '$code'";
+            $query = mysqli_query($conectar, $sql);
+            $row = mysqli_fetch_array($query);
+            $estado = $row['nm_estado'];
+        return $estado;
+        case 'cidade':
+            $sql = "SELECT nm_cidade FROM tb_cidades WHERE cd_cidade = '$code'";
+            $query = mysqli_query($conectar, $sql);
+            $row = mysqli_fetch_array($query);
+            $cidade = $row['nm_cidade'];
+        return $cidade;
+    }
+}
+
+function localeToCode($code, $type) {
+    include 'configuracao.php';
+    switch ($type) {
+        case 'estado':
+            $sql = "SELECT cd_estado FROM tb_estados WHERE nm_estado = '$code'";
+            $query = mysqli_query($conectar, $sql);
+            $row = mysqli_fetch_array($query);
+            $estado = $row['cd_estado'];
+        return $estado;
+        case 'cidade':
+            $sql = "SELECT cd_cidade FROM tb_cidades WHERE nm_cidade = '$code'";
+            $query = mysqli_query($conectar, $sql);
+            $row = mysqli_fetch_array($query);
+            $cidade = $row['cd_cidade'];
+        return $cidade;
+    }
+}
+
+// função que registra descarte
+function registrarDescarte($descricao, $quantidade, $user, $estado, $cidade) {
+    include 'configuracao.php';
+
+    $data = currentDate();
+
+    $descricao = mysqli_real_escape_string($conectar, $descricao);
+    $quantidade = mysqli_real_escape_string($conectar, $quantidade);
+
+    $sql = ("SELECT MAX(cd_descarte) FROM tb_descartes");
+    $query = mysqli_query($conectar, $sql);
+    $row = mysqli_fetch_array($query);
+    $new_id = $row[0];
+    $new_id++;
+
+    $sql = ("INSERT INTO tb_descartes (cd_descarte, cd_usuario, cd_agenda, cd_estado, cd_cidade, ds_descarte, qt_descarte, ic_disponibilidade, dt_criacao) VALUES ('$new_id', '$user', '0', '$estado', '$cidade', '$descricao', '$quantidade', '1', '$data')");
+    if (mysqli_query($conectar, $sql)) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+function formatAdm($admName) {
+    if (strlen($admName) > 6) {
+        $admName = substr($admName, 0, 6);
+        $admName .= "...";
+    }
+    return "<strong><span class=adm>".strtoupper($admName)." <sup style=font-size:8px>[ADM]</span></sup></strong>";
+}
+
+// função que desloga o usuário
+function sair() {
+    unset($_SESSION['sessao']);
+    unset($_SESSION['nm_usuario']);
+    unset($_SESSION['cd_tipo']);
+    session_destroy();
+    header('location: index.php');
+}
+
+// função pra verificar se, quem tá acessando a página está logado
+function requiredAuth() {
+    if (!isset($_SESSION['sessao'])) {
+        echo "<META http-equiv=refresh content=0;URL=index.php>";
+        exit;
+    }
+}
+
+// função pra verificar se, quem tá acessando a página está logado como ADM
+function requiredAuthAdm() {
+    include 'configuracao.php';
+
+    if (!isset($_SESSION['sessao'])) {
+        echo "<META http-equiv=refresh content=0;URL=index.php>";
+        exit;
+    } else {
+        $sid = $_SESSION['sessao'];
+        $sql = "SELECT cd_tipo FROM tb_usuarios WHERE cd_usuario = '$sid'";
+        $query = mysqli_query($conectar, $sql);
+        $row = mysqli_fetch_array($query);
+        $tipo = $row['cd_tipo'];
+        if ($tipo != '3') {
+            echo "<META http-equiv=refresh content=0;URL=index.php>";
+            exit;
+        }
+    }
+}
+
+// função pra verificar se, quem tá acessando a página está logado como usuário do tipo Coletor
+function requiredAuthColeta() {
+    include 'configuracao.php';
+
+    if (!isset($_SESSION['sessao'])) {
+        echo "<META http-equiv=refresh content=0;URL=index.php>";
+        exit;
+    } else {
+        $sid = $_SESSION['sessao'];
+        $sql = "SELECT cd_tipo FROM tb_usuarios WHERE cd_usuario = '$sid'";
+        $query = mysqli_query($conectar, $sql);
+        $row = mysqli_fetch_array($query);
+        $tipo = $row['cd_tipo'];
+        if ($tipo != '2' && $tipo != '3') {
+            echo "<META http-equiv=refresh content=0;URL=index.php>";
+            exit;
+        }
+    }
+}
+
+// função pra verificar se, quem tá acessando a página está logado como usuário do tipo Descartador
+function requiredAuthDescarte() {
+    include 'configuracao.php';
+
+    if (!isset($_SESSION['sessao'])) {
+        echo "<META http-equiv=refresh content=0;URL=index.php>";
+        exit;
+    } else {
+        $sid = $_SESSION['sessao'];
+        $sql = "SELECT cd_tipo FROM tb_usuarios WHERE cd_usuario = '$sid'";
+        $query = mysqli_query($conectar, $sql);
+        $row = mysqli_fetch_array($query);
+        $tipo = $row['cd_tipo'];
+        if ($tipo != '0' && $tipo != '1' && $tipo != '3') {
+            echo "<META http-equiv=refresh content=0;URL=index.php>";
+            exit;
+        }
+    }
+}
+
+// função pra procurar cartões de descarte
+function procurarDescartes($currentId) {
+    include 'configuracao.php';
+
+    $sql = "SELECT cd_cidade, cd_estado FROM tb_atuacao_coletor WHERE cd_usuario = '$currentId'";
+    $query = mysqli_query($conectar, $sql);
+    foreach($query as $endereco) {
+        $estado = $endereco['cd_estado'];
+        $cidade = $endereco['cd_cidade'];
+        $sql = "SELECT cd_usuario, cd_cidade, cd_estado FROM tb_enderecos WHERE cd_estado = '$estado' AND cd_cidade = '$cidade'";
+        $query = mysqli_query($conectar, $sql);
+        foreach ($query as $usuario) {
+            $cidadee = $usuario['cd_cidade'];
+            $estadoo = $usuario['cd_estado'];
+            $usuario = $usuario['cd_usuario'];
+            $sql = "SELECT cd_descarte, qt_descarte, ic_taxa, ds_descarte, dt_criacao FROM tb_descartes WHERE cd_usuario = '$usuario'";
+            $query = mysqli_query($conectar, $sql);
+            foreach ($query as $descarte) {
+                $descarteId = $descarte['cd_descarte'];
+                $estado = codeToLocale($estadoo, 'estado');
+                $cidade = codeToLocale($cidadee, 'cidade');
+                $descarteDesc = $descarte['ds_descarte'];
+                $descarteQt = $descarte['qt_descarte'];
+                $data = $descarte['dt_criacao'];
+                $data = inverteData($data);
+
+                if (strlen($descarteDesc) > 10) {
+                    $descarteDesc = substr($descarteDesc, 0, 10);
+                    $descarteDesc = "<p class='card-text'>Observações: ".$descarteDesc."...</p>";
+                } else if (strlen($descarteDesc) == 0) {
+                    $descarteDesc = "<p class='card-text'>Sem Observações</p>";
+                } else {
+                    $descarteDesc = "<p class='card-text'>Observações: ".$descarteDesc."</p>";
+                }
+
+                echo "<a href=post.php?id=".$descarteId.">";
+                echo "<div class='card b'>";
+                echo "<div class=card-body>";
+                echo "<h5 class=card-title>".$cidade." - ".$estado."</h5>";
+                echo "<h6 class='card-subtitle mb-2'>";
+                echo $descarteQt." Litros";
+                echo "</h6>";
+                echo $descarteDesc;
+                echo $data."<br>";
+                echo "</div>";
+                echo "</div>";
+                echo "</a>";
+            }
+        }
+    }
+}
+
+// função pra atualizar os dados cadastrais
+function userUpdate($email, $senha, $nome, $currentId, $cidade, $estado, $telefone, $bairro, $complemento, $numero, $rua, $cep, $login, $tipoSelf, $estadoAtuacao, $cidadeAtuacao) {
+    include 'configuracao.php';
+
+    if (!empty($nome)) {
+        $infoArr = verifyBadWords($nome);
+        $isBad = $infoArr['bad'];
+        if (!$isBad)
+            $nome = ucwords($infoArr['words']);
+        else
+            return 1;
+    }
+
+
+    //tb_spec
+    $nome = mysqli_real_escape_string($conectar, $nome);
+    
+    //tb_usuarios
+    $login = mysqli_real_escape_string($conectar, $login);
+    $email = mysqli_real_escape_string($conectar, $email);
+    
+    //tb_endereço
+    $telefone = mysqli_real_escape_string($conectar, $telefone);
+    $estado = mysqli_real_escape_string($conectar, $estado);
+    $cidade = mysqli_real_escape_string($conectar, $cidade);
+    $bairro = mysqli_real_escape_string($conectar, $bairro);
+    $rua = mysqli_real_escape_string($conectar, $rua);
+    $numero = mysqli_real_escape_string($conectar, $numero);
+    $complemento = mysqli_real_escape_string($conectar, $complemento);
+    $cep = mysqli_real_escape_string($conectar, $cep);
+
+    $estado = localeToCode($estado, 'estado');
+    $cidade = localeToCode($cidade, 'cidade');
+
+    if ($estadoAtuacao != null && $cidadeAtuacao != null) {
+        $val=0;
+        $sql = "DELETE FROM tb_atuacao_coletor WHERE cd_usuario=$currentId";
+        mysqli_query($conectar, $sql);
+        foreach ($estadoAtuacao as $estadoA) {
+            if ($estadoA != "") {
+                $estadoA = $estadoA;
+            } else {
+                $estadoA = "";
+            }
+            if ($cidadeAtuacao[$val] != "") {
+                $cidadeA = $cidadeAtuacao[$val];
+            } else {
+                $cidadeA = "";
+            }
+            $val++;
+            $estadoA = mysqli_real_escape_string($conectar, $estadoA);
+            $cidadeA = mysqli_real_escape_string($conectar, $cidadeA);
+            $estadoA = localeToCode($estadoA, 'estado');
+            $cidadeA = localeToCode($cidadeA, 'cidade');
+            if ($estadoA != 0) {
+                $sql = "SELECT cd_cidade FROM tb_atuacao_coletor WHERE cd_cidade = '$cidadeA'";
+                $query = mysqli_query($conectar, $sql);
+                $count = mysqli_num_rows($query);
+                if ($count == 0) {
+                    $sql = "INSERT INTO tb_atuacao_coletor (cd_usuario, cd_estado, cd_cidade) VALUES ('$currentId','$estadoA','$cidadeA')";
+                    mysqli_query($conectar, $sql);
+                }
+            }
+        }        
+    } else {
+        $sql = "DELETE FROM tb_atuacao_coletor WHERE cd_usuario=$currentId";
+        mysqli_query($conectar, $sql);
+    }
+
+    $sql = ("SELECT nm_login FROM tb_logins WHERE nm_login = '$login' AND NOT cd_usuario = '$currentId'");
+    $query = mysqli_query($conectar, $sql);
+    $row = mysqli_num_rows($query);
+
+    if ($row > 0) {
+        $rowArray = mysqli_fetch_array($query);
+        $rowLogin = $rowArray['nm_login']." já está sendo utilizado por outra conta.";
+        echo "msgShow(34,2,0,'center','','',false,true,false, '$rowLogin');";
+        return 2;
+    } else {
+        $sql = ("SELECT ds_email FROM tb_logins WHERE ds_email = '$email' AND NOT cd_usuario = '$currentId'");
+        $query = mysqli_query($conectar, $sql);
+        $row = mysqli_num_rows($query);
+        
+        if ($row > 0) {
+            $rowArray = mysqli_fetch_array($query);
+            $rowEmail = $rowArray['ds_email']." já está sendo utilizado por outra conta.";
+            echo "msgShow(35,2,0,'center','','',false,true,false, '$rowEmail');";
+            return 3;
+        } else {
+            $_SESSION['nm_usuario'] = $nome;
+            $sqlEndereco = "UPDATE tb_enderecos SET cd_estado = '$estado', cd_cidade = '$cidade', ds_bairro = '$bairro', ds_rua = '$rua', ds_numero = '$numero', ds_complemento = '$complemento', ds_cep = '$cep' WHERE cd_usuario = '$currentId'";
+            $sqlNome = ("UPDATE tb_usuarios SET nm_usuario = '$nome', ds_telefone = '$telefone' WHERE cd_usuario = '$currentId'");
+
+            if ($senha != "") {	
+                $senha = crypts($senha);
+                $sqlLogin = "UPDATE tb_logins SET nm_login = '$login', ds_email = '$email', cd_senha = '$senha' WHERE cd_usuario = '$currentId'";
+                
+            } else {
+                $sqlLogin = "UPDATE tb_logins SET nm_login = '$login', ds_email = '$email' WHERE cd_usuario = '$currentId'";
+            }
+            mysqli_query($conectar, $sqlLogin);
+            mysqli_query($conectar, $sqlEndereco);
+            mysqli_query($conectar, $sqlNome);
+            return 0;
+        }
+    }
+}
+?>

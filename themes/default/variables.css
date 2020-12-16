@@ -1,0 +1,17 @@
+:root {
+    /* Configurações CSS */
+    --version: ' || ver: 0.0.2 - pre-alpha';
+    --font_family_default: cursive;
+    --scrollbar-width: calc(100vw - 100%);
+
+    /* Paleta de Cores Geral */
+    --bg_default: rgb(0, 0, 0);
+    --system_ui_bg_default: rgb(88, 88, 88);
+    --main_bg_default: #42854280;
+    --font_color_default:rgb(255, 255, 255);
+}
+
+@font-face {
+    font-family: aaa;
+    src: url('aaa.ttf');
+}

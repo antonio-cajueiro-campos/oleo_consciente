@@ -1,0 +1,15 @@
+FORBIDEEN TO ACCESS:
+
+  :inc/
+    footer.php
+    header.php
+
+  :php/
+    classes/*
+    configuracao.php
+    functions.php
+    main.php
+    notify_box.php
+    notify_count.php
+    email.php
+

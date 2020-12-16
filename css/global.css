@@ -1,0 +1,142 @@
+/* encapsulamento inicial */
+
+.wrapper {
+    width: 100%;
+    position: flex;
+    min-height: calc(100vh - 50px);
+    padding: 0 0 0 0;
+    align-items: stretch;
+    perspective: 1500px;
+}
+
+/* HEADER */
+
+.container-fluid {
+    margin: 0!important;
+    padding: 0!important;
+}
+
+.main-navbar {
+    position: absolute;
+    top: -60px;
+    width: 100%;
+}
+
+.logo {
+    width: 100%;
+    border-bottom: 1px solid #FFD700;
+    border-radius: 5px;
+}
+
+.logo:hover {
+    background: #ffd9002c;
+}
+
+@media (max-width:20em) {
+    .navbar-brand {
+        width: 175px;
+        margin: 0;
+    }
+}
+
+.bv-txt {
+    line-height: 44px;
+    margin: 0 0;
+}
+
+.nav-link.e {
+    margin: 10px 0;
+}
+
+.not-bu {
+    position: relative;
+}
+
+.card {
+    display: inline-block;
+    margin: 5px;
+    border-radius: 7px;
+    max-width: 300px;
+    max-height: 200px;
+    width: 18rem;
+    box-shadow: 5px 5px 3px rgba(7, 7, 7, 0.185);
+}
+
+.not-buu {
+    top: -7px;
+    right: -7px;
+    position: absolute;
+    font-size: 15px;
+    border-radius: 20px;
+    background: red;
+    width: 20px;
+    margin: 0 0 0 5px;
+    display: inline-block;
+}
+
+.shownot {
+    max-height: 500px;
+    overflow-y: scroll;
+    padding: 0;
+}
+
+.about {
+    margin: 0 0 0 15px;
+}
+
+@media (max-width:61.99em) {
+    .nav-link {
+        margin: 10px 0;
+    }
+    #logo {
+        position: absolute;
+        width: 200px;
+        left: 65px;        
+    }
+    .about {
+        margin: 0 auto 0 auto;
+    }
+}
+
+/* conteúdo */
+
+.container.main {
+    position: relative;
+    margin: 0 auto;
+    padding: 10px;
+    min-height: calc(100vh - 50px);
+}
+
+.card-custom {
+    border: 2px white solid;
+    display: inline-block;
+    margin: 15px 5px;
+    padding: 5px 15px;
+}
+
+/* RODAPÉ - FOOTER */
+
+.footer {
+	width: 100%;
+	height: 50px;
+    position: absolute;
+    bottom: -50px;
+    text-align: center;
+}
+
+.footer-p {
+    font-size: .7rem;
+    line-height: 50px;
+    margin: 0;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif!important;
+}
+
+@media (max-width:61.99em) {
+    .container.main {
+        min-width: 360px;
+    }
+    .footer-p:after {
+        content: '';
+    }
+}
