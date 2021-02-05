@@ -46,6 +46,11 @@ a:visited {
     min-width: max-content;
 }
 
+.breadcrumb {
+    background-color: white;
+    margin-bottom: 10px;
+}
+
 .mgtp {
     margin-top: 10px;
 }
@@ -490,6 +495,285 @@ a:visited {
     cursor: pointer;
 }
 
+.border-off {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 170px;
+    height: 170px;
+}
+
+.profile-picture {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    object-position: 50% 0;
+}
+
+.nivel {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    bottom: 14px;
+    font-size: 22px;
+}
+
+/*
+- review classes
+*/
+.reviewList {
+    border-radius: 5px;
+    margin: 0;
+}
+
+.review {
+    position: relative;
+    border: #DFDFDF 1px solid;
+    border-radius: 5px;
+    margin: 20px 0 0 0;
+    padding: 20px 0 0 0;
+}
+
+.reviewPictureBox:hover {
+    transform: scale(0.97);
+}
+
+.reviewPictureBox {
+    position: relative;
+    margin: 0 16px;
+    width: 72.5px;
+    height: 75px;
+}
+
+.reviewPicture {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 63px;
+    height: 63px;
+    object-fit: cover;
+    border-radius: 50%;
+    object-position: 50% 0;
+}
+
+.reviewBorder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 72px;
+    height: 74px;
+}
+
+.reviewLevel {
+    color: white;
+    font-size: 10px;
+    position: absolute;
+    bottom: 6px;
+    left: 49.5%;
+    transform: translate(-50%);
+
+}
+
+.reviewUsername {
+    position: absolute;
+    top: 33px;
+    left: 100px;
+}
+
+.reviewStars {
+    position: absolute;
+    display: flex;
+    color: gold;
+    top: 62px;
+    left: 100px;
+}
+
+.reviewMsg {
+    background: rgb(231, 231, 231);
+    padding: 5px 15px;
+    margin: 16px 0 0 0;
+    border-radius: 4px;
+    overflow-wrap: break-word;
+}
+
+.reviewData {
+    position: absolute;
+    top: 82px;
+    right: 15px;
+    font-size: 14px;
+    color: rgb(124, 124, 124);
+}
+
+.revMsgWithoutMsg {
+    margin-top: 9px;
+    background: white;
+}
+
+.revDataWithoutMsg {
+    top: 85px;
+}
+
+.reviewX {
+    position: absolute;
+    background-color: rgba(204, 204, 204, 0.281);
+    height: 35px;
+    width: 35px;
+    right: -5px;
+    top: -5px;
+    border-radius: 4px;
+    z-index: 500;
+    border: none;
+    cursor: pointer;
+    transform: translate(-5px, 5px);
+}
+
+.reviewX:after {
+    position: absolute;
+    content: '';
+    height: 100%;
+    width: 18%;
+    border-radius: 7px;
+    background-color: rgb(255, 137, 137);
+    transform: rotate(45deg) translate(10px, -10px);
+}
+
+.reviewX:before {
+    position: absolute;
+    content: '';
+    height: 100%;
+    width: 18%;
+    border-radius: 7px;
+    background-color: rgb(255, 138, 138);
+    transform: rotate(-45deg) translate(10px, 10px);
+}
+
+.reviewX:hover {
+
+}
+
+.p-text-b {
+
+}
+
+.reviewX:hover:after,.reviewX:hover:before {
+    background-color: rgb(253, 62, 62)!important;
+}
+
+
+.swiperProfile {
+    position: relative;
+    margin: 0 auto;
+    width: 115px;
+    height: 108px;
+}
+
+.sliderPicture {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    object-position: 50% 0;
+}
+
+.sliderBorder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 115px;
+    height: 117px;
+}
+
+.sliderLevel {
+    color: white;
+    font-size: 15.7px;
+    position: absolute;
+    bottom: -0.8px;
+    left: 49.9%;
+    transform: translate(-50%);
+}
+
+.swiperInfo {
+    margin: 0 auto 0 auto;
+}
+
+.swiperName {
+    font-weight: bold;
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+
+.swiperMaterial {
+    margin: 15px 0 0 0;
+}
+
+.swiper-slide {
+    min-width: 200px!important;
+    min-height: 280px;
+    background-color: white;
+    border: green 5px solid;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.swiper-slide:hover {
+    background: rgb(236, 236, 236);
+    transform: scale(0.99)
+}
+
+.swiper-button-prev, .swiper-button-next {
+    filter: hue-rotate(-40deg);
+}
+
+.swiperCrown {
+    position: absolute;
+    top: -21px;
+    right: -10px;
+    width:60px;
+    transform: rotate(33deg);
+    z-index: 500;
+}
+
+.descartePageTitle {
+    margin: 20px auto;
+    font-size: 25px;
+}
+
+.rating {
+	cursor: pointer;
+}
+
+.rating .rating-star {
+    display: inline-block;
+    position: relative;
+    padding-right: 5px;
+    margin-left: -5px;
+    color: gold;
+}
+
+.rating .selected:before {
+    content: '\f005';
+}
+
+.review-input-title {
+    font-size: 21px;
+    margin: 0 0 10px 0;
+}
+
+.review-input-text {
+    margin: 15px 0 0 0;
+}
+
+
 @media (max-width: 1100px) {
     .descleft {
         width: 100%;
@@ -731,6 +1015,19 @@ a:visited {
     background:#ffd900;
 }
 
+.progress.xp {
+    position: relative;
+}
+
+.porcXp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+    z-index: 100;
+    font-weight: bold;
+}
+
 .pagination {
     position: absolute;
     left: 50%;
@@ -740,6 +1037,8 @@ a:visited {
 }
 
 .cartoes {
+    position: relative;
+    padding: 30px;
     margin-bottom: 83px;
 }
 
@@ -760,14 +1059,6 @@ a:visited {
     .lineMob > .locale {
         padding: 5px 0!important;
     }
-}
-
-.nivel {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    bottom: 20px;
-    font-size: 16px;
 }
 
 .container.contform {
@@ -861,20 +1152,35 @@ a:visited {
     color:#FFD700ce;
 }
 
+.procurar-agendas-container {
+    padding: 20px 0;
+}
+
+.list-group-item-dark.p-agenda {
+    background-color:#5a5a5a!important;
+    border-radius: 10px!important;
+    margin: 10px auto;
+}
+
+.list-group-item-dark.p-agenda:hover {
+    background-color: rgb(61, 61, 61)!important;
+}
+
 .contentBox {
     background: white url(./../../images/borderGreen.png);
     background-repeat: repeat-x;
     background-position: bottom;
     color: black;
     border-radius: 10px;
-    padding: 0 15px 170px 15px;
+    min-height: 90vh;
+    padding: 0 15px 200px 15px;
     /*height: 87.5vh;*/
 }
 
 .contentBox.configContent {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    padding: 0 0 140px 0;
+    padding: 0 0 250px 0;
 }
 
 .top-10 {

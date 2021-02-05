@@ -53,11 +53,11 @@ class utils {
         if ($jsonEnc = file_get_contents($api_url))
             $jsonDec = json_decode($jsonEnc);
         else
-            $jsonDec = (object)['status'=>'MR'];
+            $jsonDec = (object) [ 'status' => 'MR' ];
         return $jsonDec;
     }
 
-    function formatAdm($admName) {
+    public function formatAdm($admName) {
         if (strlen($admName) > 6) {
             $admName = substr($admName, 0, 6);
             $admName .= "...";
@@ -65,7 +65,7 @@ class utils {
         return "<strong><span class=adm>".strtoupper($admName)." <sup style=font-size:8px>[ADM]</span></sup></strong>";
     }
 
-    function hashnator($path) {
+    public function hashnator($path) {
         $hash = hash_file("md5", $path);
         $newpath = $path."?v=".$hash;
         return $newpath;
@@ -115,6 +115,60 @@ class utils {
         return implode(" ", $nomePalavra);
     }
 
+    public function getStarsImage($reviewStars) {
+
+        $stars = "";
+        
+        $starsFull = "<i class='fa fa-star' aria-hidden=true></i>";
+        //$starsHalf = "<i class='fa fa-star-half-o' aria-hidden=true></i>";
+        $starsEmpty = "<i class='fa fa-star-o' aria-hidden=true></i>";
+
+        $reviewStars = round($reviewStars);
+
+        switch ($reviewStars) {
+            case 0:
+                for ($i = 0; $i <= 4; $i++) {
+                    $stars .= $starsEmpty;
+                }
+            break;
+            case 1:
+                $stars .= $starsFull;
+                for ($i = 0; $i <= 3; $i++) {
+                    $stars .= $starsEmpty;
+                }
+            break;
+            case 2:
+                for ($i = 0; $i <= 1; $i++) {
+                    $stars .= $starsFull;
+                }
+                for ($i = 0; $i <= 2; $i++) {
+                    $stars .= $starsEmpty;
+                }
+            break;
+            case 3:
+                for ($i = 0; $i <= 2; $i++) {
+                    $stars .= $starsFull;
+                }
+                for ($i = 0; $i <= 1; $i++) {
+                    $stars .= $starsEmpty;
+                }
+            break;
+            case 4:
+                for ($i = 0; $i <= 3; $i++) {
+                    $stars .= $starsFull;
+                }
+                $stars .= $starsEmpty;
+            break;
+            case 5:
+                for ($i = 0; $i <= 4; $i++) {
+                    $stars .= $starsFull;
+                }
+            break;
+        }
+
+        return $stars;
+    }
+
     public function newId($tabela, $coluna) {
         $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
         $sql = "SELECT MAX($coluna) FROM $tabela";
@@ -126,10 +180,10 @@ class utils {
     }
 
     public function inverteData($data){
-        if(count(explode("/",$data)) > 1){
-            return implode("-",array_reverse(explode("/",$data)));
-        }elseif(count(explode("-",$data)) > 1){
-            return implode("/",array_reverse(explode("-",$data)));
+        if (count(explode("/", $data)) > 1){
+            return implode("-", array_reverse(explode("/", $data)));
+        } else if (count(explode("-", $data)) > 1){
+            return implode("/", array_reverse(explode("-", $data)));
         }
     }
 
@@ -144,6 +198,27 @@ class utils {
         $query = $mysqli->query($sql);
         $row = $query->fetch_array(MYSQLI_NUM);
         return $row[0];
+    }
+
+    public function organizeMaterial($material) {
+
+        $material_agua_raw = $material * 25000;
+        $matLen = strlen($material_agua_raw);
+
+
+        if ($matLen < 4) {
+            $material_agua = $material_agua_raw;
+        } else if ($matLen >= 4 && $matLen < 7) {
+            $material_agua = substr($material_agua_raw, 0, -3)." mil de ";
+        } else if ($matLen >= 7 && $matLen < 10) {
+            $material_agua = substr($material_agua_raw, 0, -6)." mi de ";
+        } else if ($matLen >= 10 && $matLen < 13) {
+            $material_agua = substr($material_agua_raw, 0, -9)." bi de ";
+        } else {
+            $material_agua = " muitos ";
+        }
+
+        return $material_agua;
     }
 
     public function codeToLocale($code, $type) {
@@ -176,6 +251,27 @@ class utils {
         return $cidade;
     }
 
+    public function badwordsVer($words) {
+        $path = "vendor/autoload.php";
+        if (!file_exists($path)) {
+            $path = "php/".$path;
+            if (!file_exists($path)) {
+                $path = "../vendor/autoload.php";
+            }
+        }
+        include $path;
+        $extra = [
+            'badwords' => [' cu ', 'cu ', 'puta ', ' puta '],
+            'ignored'  => ['cadela'],
+        ];
+        $verifyBW = \Badwords\Badwords::verify($words, $extra);
+        if ($verifyBW) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function convertBadTags($id){
         $error = false;
         $badwords = array("" => "");
@@ -193,29 +289,37 @@ class utils {
             "error" => $error
         );
     }
-    
+
     // metodo pra verificar se tem uma badword numa string, retorna um array contendo true or false, e a string convertida com asteriscos
     public function verifyBadWords($words) {
         $words = mb_convert_case($words, MB_CASE_LOWER, "UTF-8");
         $isBad = false;
-        $badwords = $this->convertBadTags('U2jy55Zv');
-        $error = $badwords['error'];
-        if ($error == false) {
-            for ($i=0; $i < count($badwords['list']); $i++) {
-                $pos = strpos($words, $badwords['list'][$i]);
-                while($pos !== false) {
-                    for($j = $pos; $j < $pos + strlen($badwords['list'][$i]); $j++)
-                        $words[$j]="*";
-                    $isBad = true;
-                    $pos = strpos($words, $badwords['list'][$i]);
-                }
+
+        $path = "filters/badwords.php";
+        if (!file_exists($path)) {
+            $path = "php/".$path;
+            if (!file_exists($path)) {
+                $path = "../filters/badwords.php";
             }
         }
-        return array(
+        
+        $badwords = (array) include $path;
+
+        for ($i=0; $i < count($badwords); $i++) {
+            $pos = strpos($words, $badwords[$i]);
+            while($pos !== false) {
+                for($j = $pos; $j < $pos + strlen($badwords[$i]); $j++)
+                    $words[$j]="*";
+                $isBad = true;
+                $pos = strpos($words, $badwords[$i]);
+            }
+        }
+
+        return [
             "words" => $words,
             "bad" => $isBad,
-            "error" => $error
-        );
+            "error" => false
+        ];
     }
-}   
+}
 ?>

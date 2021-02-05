@@ -144,5 +144,41 @@
 		"cancelButtonColor": "#ccc",
         "confirmButtonText": "Adicionar",
         "cancelButtonText": "Cancelar"
+	},
+	{
+		"id": 12,
+		"html": "Tem certeza que deseja carregar este arquivo?<br><b>${placeholder}</b>",
+		"title": "",
+		"icon": "",
+		"showConfirmButton": true,
+		"showCancelButton": true,
+		"confirmButtonColor": "#75cc75",
+		"cancelButtonColor": "#ccc",
+        "confirmButtonText": "Enviar",
+        "cancelButtonText": "Cancelar"
+	},
+	{
+		"id": 13,
+		"html": "Tem certeza que deseja excluir o seu review?",
+		"title": "",
+		"icon": "",
+		"showConfirmButton": true,
+		"showCancelButton": true,
+		"confirmButtonColor": "#ff7575",
+		"cancelButtonColor": "#ccc",
+        "confirmButtonText": "Excluir",
+        "cancelButtonText": "Cancelar"
+	},
+	{
+		"id": 14,
+		"html": "<div class=review-input-title>Deixe seu feedback!</div><form><input type=number style=display:none name=rating id=rating-input min=1 max=5><div class=rating role=optgroup><i class='fa fa-star-o fa-2x rating-star' id=rating-1 data-rating=1 tabindex=0 aria-label='Rate as one out of 5 stars' role=radio></i><i class='fa fa-star-o fa-2x rating-star' id=rating-2 data-rating=2 tabindex=0 aria-label='Rate as two out of 5 stars' role=radio></i><i class='fa fa-star-o fa-2x rating-star' id=rating-3 data-rating=3 tabindex=0 aria-label='Rate as three out of 5 stars' role=radio></i><i class='fa fa-star-o fa-2x rating-star' id=rating-4 data-rating=4 tabindex=0 aria-label='Rate as four out of 5 stars' role=radio></i><i class='fa fa-star-o fa-2x rating-star' id=rating-5 data-rating=5 tabindex=0 aria-label='Rate as five out of 5 stars' role=radio></i></div><textarea type=text class='form-control descOleo review-input-text' id=review-input-text name=descricao rows=3 maxlength=400 placeholder=\"Deixe seu feedback sobre a visita deste empresa! (Opcional. Máximo de 400 caracteres)\"></textarea></form>",
+		"title": "",
+		"icon": "",
+		"showConfirmButton": true,
+		"showCancelButton": true,
+		"confirmButtonColor": "#75cc75",
+		"cancelButtonColor": "#ccc",
+        "confirmButtonText": "Enviar",
+        "cancelButtonText": "Cancelar"
 	}
 ]

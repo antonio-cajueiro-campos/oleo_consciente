@@ -2,12 +2,12 @@
     include_once 'main.php';
 
     if (isset($_SESSION['sessao'])) {
-        $myId = $_SESSION['sessao'];
+        $currentId = $_SESSION['sessao'];
     } else {
-        $myId = 0;
+        $currentId = 0;
     }
 
-    $sql = "SELECT cd_notify_type, ic_new_notify, cd_notify, cd_remetente, cd_descarte, dt_emissao FROM tb_notify WHERE cd_destinatario = '$myId' order by cd_notify desc";
+    $sql = "SELECT cd_notify_type, ic_new_notify, cd_notify, cd_remetente, cd_descarte, dt_emissao FROM tb_notify WHERE cd_destinatario = '$currentId' order by cd_notify desc";
     $query = $mysqli->query($sql);
     $rowNum = $query->num_rows;
     if ($rowNum > 0) {
@@ -42,6 +42,7 @@
                 case 3: $result = "<strong><span style='font-size:15px;color:red;'>Atenção:</span></strong><br>Sua conta pode ser banida permanentemente.<br><small>$data</small>"; break;
                 case 4: $result = "<strong><span style='font-size:15px;color:red;'>Bem-vindo!</span></strong><br>Seja bem-vindo ao sistema Óleo Consciente.<br><small>$data</small>"; break;
                 case 5: $result = "<span style='font-size:15px;'>$nome<br>Cancelou a coleta da sua agenda#00</span><br><small>$data</small>"; break;
+                case 6: $result = "<span style='font-size:15px;'>$nome<br>Deixe seu feedback sobre a visita da empresa</span><br><small>$data</small>"; break;
             }
 
             if ($new == 1) {
@@ -68,6 +69,9 @@
                 break;
                 case 5:
                     echo "<span onclick='systemPopup(2, $descarteId)' class='dropdown-item text-dark notifyItem coletaNotify $isNew'>$result</span>";
+                break;
+                case 6:
+                    echo "<span onclick='systemPopup(14, $idUserRem, {fromId: $currentId, notify: $notify})' class='dropdown-item text-dark notifyItem coletaNotify $isNew'>$result</span>";
                 break;
             }
         }

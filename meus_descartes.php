@@ -8,6 +8,7 @@
             <li class="breadcrumb-item active" aria-current="page"><?php echo $nome_pagina;?></li>
         </ol>
     </nav>
+    <div class="contentBox">
     <div class="cartoes text-center">
     <?php
         if (isset($_POST['byecard'])) {
@@ -27,7 +28,7 @@
                 $dispo = "<span style='color:red'>Em processo de descarte</span>";
             
             $data = $descarte['dt_criacao'];
-            $data = inverteData($data);
+            $data = $utils->inverteData($data);
             
             $descarteId = $descarte['cd_descarte'];
 
@@ -56,6 +57,7 @@
         echo "</div>";
         echo "</div>";
     ?>
+    </div>
     </div>
 </div>
 <!-- ========== Conteúdo termina aqui ========== -->

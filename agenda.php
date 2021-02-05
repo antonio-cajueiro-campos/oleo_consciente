@@ -29,7 +29,7 @@
             $cidadeDb = $row['cd_cidade'];
             $dataColeta = $row['dt_coleta'];
             $max = $row['qt_max'];
-            $dataColeta = inverteData($dataColeta);
+            $dataColeta = $utils->inverteData($dataColeta);
             $cidade = $utils->codeToLocale($cidadeDb, 'cidade');
             $estado = $utils->codeToLocale($estado, 'estado');
             $estado = $utils->convertUf($estado, 'reverse');

@@ -46,6 +46,31 @@ function mediaQueries(mediaValue) {
         }
     }
 }
+
+function verifyUserImage(elem) {
+    let img;
+    
+    if (elem.files.length != 0) {
+        if (elem.files[0].size != 0) {
+            if (elem.files[0].size < 5000000) {
+                img = elem.files[0];
+                const [, ext] = img.name.match(/\.([^\.]*)$/) || [];
+                if (ext == "png" || ext == "jpg" || ext == "jpeg" || ext == "gif") {
+                    systemPopup(12, img);
+                } else {
+                    localStorage.setItem('msgHtml', "msgShow(69, 0);");
+                    verifyHtmlMsg();
+                }
+            } else {
+                localStorage.setItem('msgHtml', "msgShow(68, 0);");
+                verifyHtmlMsg();
+            }
+        } else {
+            localStorage.setItem('msgHtml', "msgShow(70, 0);");
+            verifyHtmlMsg();
+        }
+    }
+}
   
 function emailCheck(id) {
     let elem = document.getElementById(id);
@@ -902,13 +927,24 @@ async function cepCheck() {
 }
 
 async function getJson(fileName) {
-    const data = await fetch(`js/${fileName}.json`)
+    var headers = new Headers();
+    let method = "GET";
+    headers.append('pragma', 'no-cache');
+    headers.append('cache-control', 'no-cache');
+
+    const data = await fetch(`js/${fileName}.json`, { method, headers })
     .then(response => response.json())
     .then(json => json)
     .catch(err => {
         throw new Error("erro"+err)
     });
     return data;
+}
+
+const fetchReload = async (script, param) => {
+    data = await fetchServer(script, param);
+    localStorage.setItem('msgHtml', data);
+    location.reload();
 }
 
 async function systemPopup(id = null, value = null, list = null) {
@@ -923,12 +959,6 @@ async function systemPopup(id = null, value = null, list = null) {
     let script = "";
     let data = "";
     let html = "";
-
-    const fetchReload = async (script, param) => {
-        data = await fetchServer(script, param);
-        localStorage.setItem('msgHtml', data);
-        location.reload();
-    }
 
     if (id != null) {
         msg = json[id]
@@ -1017,9 +1047,6 @@ async function systemPopup(id = null, value = null, list = null) {
                 add = {
                     html,
                     preConfirm: async () => {
-                        param = {
-                            removeCard: value
-                        }
                         await fetchReload(script, param);
                     }
                 }
@@ -1053,7 +1080,10 @@ async function systemPopup(id = null, value = null, list = null) {
                         data = await fetchServer(script, param);
                         localStorage.setItem('msgHtml', data);
                         if (data != "msgShow(17,1);") {
-                            verifyHtmlMsg();
+                            if (data == "msgShow(29,0,10000); playNotify();")
+                                location.reload();
+                            else
+                                verifyHtmlMsg();
                         } else {
                             location.reload();
                         }
@@ -1103,6 +1133,65 @@ async function systemPopup(id = null, value = null, list = null) {
                 }
                 delete msg.alternativeHtml;
             break;
+            case 12:
+                script = "add_user_image";
+                param = { 'file': value }
+                html = msg.html;
+                html = html.replace("${placeholder}", value.name);
+                add = {
+                    html,
+                    preConfirm: async () => {
+                        data = await fetchServer(script, param);
+                        if (IsJsonString(data)) {
+                            data = JSON.parse(data);
+                            if (!data.error) {
+                                localStorage.setItem('msgHtml', "msgShow(67, 1);");
+                                location.reload(true)
+                            } else if (data.message == "Exceeded filesize limit.") {
+                                localStorage.setItem('msgHtml', "msgShow(68, 0);");
+                                verifyHtmlMsg();
+                            } else if (data.message == "Invalid file format.") {
+                                localStorage.setItem('msgHtml', "msgShow(69, 0);");
+                                verifyHtmlMsg();
+                            } else {
+                                localStorage.setItem('msgHtml', "msgShow(-1, 1);");
+                                verifyHtmlMsg();
+                            }
+                        } else {
+                            localStorage.setItem('msgHtml', "msgShow(-1, 1);");
+                            verifyHtmlMsg();
+                        }
+                    }
+                }
+            break;
+            case 13:
+                script = "excluir_review";
+                param = { 'review': value };
+                add = {
+                    preConfirm: async () => {
+                        await fetchReload(script, param);
+                    }
+                };
+            break;
+            case 14:
+                script = "adicionar_review";
+                add = {
+                    preConfirm: async () => {
+                        let reviewMsg = document.getElementById('review-input-text');
+                        let reviewStars = document.getElementById('rating-input');
+                        let notifyId = list.notify;
+                        let fromId = list.fromId;
+                        param = {
+                            'to': value,
+                            'from': fromId,
+                            'notify': notifyId,
+                            'reviewMsg': reviewMsg.value,
+                            'reviewStars': reviewStars.value
+                        };
+                        await fetchReload(script, param);
+                    }
+                };
+            break;
             default:
                 msg = json[0];
                 delete msg.id;
@@ -1117,6 +1206,52 @@ async function systemPopup(id = null, value = null, list = null) {
     }
     Swal.fire(msg);
     verifyList = true;
+    if (id == 14)
+    rating();
+}
+
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+function setRating(rating) {
+    $('#rating-input').val(rating);
+    // fill all the stars assigning the '.selected' class
+    $('.rating-star').removeClass('fa-star-o').addClass('selected');
+    // empty all the stars to the right of the mouse
+    $('.rating-star#rating-' + rating + ' ~ .rating-star').removeClass('selected').addClass('fa-star-o');
+}
+
+function rating() {        
+    $('.rating-star')
+    .on('mouseover', function(e) {
+        var rating = $(e.target).data('rating');
+        // fill all the stars
+        $('.rating-star').removeClass('fa-star-o').addClass('fa-star');
+        // empty all the stars to the right of the mouse
+        $('.rating-star#rating-' + rating + ' ~ .rating-star').removeClass('fa-star').addClass('fa-star-o');
+    })
+    .on('mouseleave', function (e) {
+        // empty all the stars except those with class .selected
+        $('.rating-star').removeClass('fa-star').addClass('fa-star-o');
+    })
+    .on('click', function(e) {
+        var rating = $(e.target).data('rating');
+        setRating(rating);
+    })
+    .on('keyup', function(e){
+        // if spacebar is pressed while selecting a star
+        if (e.keyCode === 32) {
+            // set rating (same as clicking on the star)
+            var rating = $(e.target).data('rating');
+            setRating(rating);
+        }
+    });
 }
 
 //msgShow(ID da MSG, Tipo de icon, Tempo de exibição(em milisegundos), Posição da exibição)
@@ -1285,6 +1420,19 @@ jQuery(document).ready(function($) {
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+$(document).ready(function() {
+    $("#changePic").click(function(e){
+        e.preventDefault();
+        $("#profile-picture").trigger('click');
+    });
+    $("#removePic").click(function(e){
+        e.preventDefault();
+        if ($("#pfp").attr('src') != "images/border-on.png")
+        fetchReload('remove-pfp', {'r': true});
+    });
+    if ($("#pfp").attr('src') == "images/border-on.png")
+    $("#removePic").attr("disabled", "true");
+});
 
 function oilBar() {
     // var isFF = true;

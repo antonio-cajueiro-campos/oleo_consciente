@@ -8,13 +8,14 @@
         <li class="breadcrumb-item active" aria-current="page"><?php echo $nome_pagina;?></li>
     </ol>
 </nav>
+<div class="contentBox">
 
 <div id="loadbox" style="display:none">
   <div id="load"></div>
   <div id="msg">Aguarde, carregando...</div>
 </div>
 
-<div class='cartoes text-center'>
+<div class='procurar-agendas-container text-center'>
 <?php
     if (isset($_GET['p']) && $_GET['p'] != "" && ctype_digit($_GET['p'])) {
         $p = $_GET['p'];
@@ -64,11 +65,11 @@
           $horaInicial = substr($horaInicial, 0, 5);
           $horaFinal = substr($horaFinal, 0, 5);
   
-          $data = inverteData($dataColeta);
+          $data = $utils->inverteData($dataColeta);
           $estado = $utils->convertUf($estado, 'reverse');
           if ($cidadeDb != null) {
               echo "<a href=agenda.php?id=".$agendaId.">";
-              echo "<span class='list-group-item text-dark text-left'>";
+              echo "<span class='list-group-item text-light text-left list-group-item-dark p-agenda'>";
               echo "<span class='agendaItem disabled'>Agenda#$agendaId |  <strong>$data</strong> | <strong> das $horaInicial às $horaFinal</strong> criado por $nomeEmpresa</span>";
               echo "</span>";
               echo "</a>";
@@ -119,7 +120,7 @@
   </ul>
 </nav>
 <?php } ?>
-
+</div>
 </div>
 <!-- ========== Conteúdo termina aqui ========== -->
 <?php include 'inc/footer.php'?>

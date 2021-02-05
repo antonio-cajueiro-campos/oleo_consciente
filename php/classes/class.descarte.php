@@ -16,9 +16,7 @@ class descarte {
 
     public function criar($usuarioId, $descricao, $quantidade) {
         include_once 'class.utils.php';
-        include_once 'class.usuario.php';
         $utils = new utils();
-        $usuario = new usuario();
         $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
         $dataCriacao = $utils->currentDate();
 

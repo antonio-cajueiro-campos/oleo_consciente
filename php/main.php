@@ -1,4 +1,5 @@
 <?php
+    setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
     include_once 'classes/class.usuario.php';
     include_once 'classes/class.system.php';
     include_once 'classes/class.utils.php';

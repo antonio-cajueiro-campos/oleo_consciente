@@ -41,16 +41,16 @@ class usuario {
         $data = $utils->currentDate();
         
         // verifica se o nome digitado tem palavrões, se sim, retorna código de erro 6
-        try {
-            $is = $utils->verifyBadWords($nome);
-            if ($is['error'] == true) {
-                throw new Exception("Erro");
-            }
-        } catch (Throwable $e) {
-            return array( "code" => 7 );
-        }
+        // try {
+        //     $is = $utils->verifyBadWords($nome);
+        //     if ($is['error'] == true) {
+        //         throw new Exception("Erro");
+        //     }
+        // } catch (Throwable $e) {
+        //     return array( "code" => 7 );
+        // }
 
-        if ($is['bad']) return array( "code" => 6 );
+        // if ($is['bad']) return array( "code" => 6 );
 
         // query pra verificar se ja existe usuario com o email ou login inserido
         $sql = "SELECT cd_usuario FROM tb_logins WHERE ds_email = '$email' OR nm_login = '$login'";
@@ -123,7 +123,7 @@ class usuario {
                     $sqlLogins = "INSERT INTO tb_logins (cd_usuario, nm_login, ds_email, cd_senha) VALUES ('$new_id', '$login', '$email', '$senha')";
                     $sqlUsuarios = "INSERT INTO tb_usuarios (cd_usuario, nm_usuario, ds_telefone, cd_cpf_cnpj, cd_tipo, dt_criacao, cd_qt_notify, qt_advertence, ic_desativado) VALUES ('$new_id', '$nome', '$telefone', '$cpf_cnpj', '$tipo', '$data', '0', '0', '0')";
                     $sqlEnderecos = "INSERT INTO tb_enderecos (cd_usuario, cd_estado, cd_cidade, ds_bairro, ds_rua, ds_numero, ds_complemento, ds_cep) VALUES ('$new_id', '$estado', '$cidade', '$bairro', '$rua', '$numero', '$complemento', '$cep')";
-                    $sqlConfigs = "INSERT INTO tb_configs (cd_usuario, cd_theme, ic_premium, qt_material, qt_nivel, ds_atuacao) VALUES ('$new_id', '0', '0', '0', '1', '')";
+                    $sqlConfigs = "INSERT INTO tb_configs (cd_usuario, cd_theme, ic_premium, qt_material, qt_nivel, ds_atuacao, ds_xp) VALUES ('$new_id', '0', '0', '0', '1', '', '0')";
                     
                     try {
                         $mysqli->begin_transaction();
@@ -179,10 +179,11 @@ class usuario {
             $atuacaoEstado = "";
             $atuacaoCidade = "";
             $localeArr = array();
-
             for ($i = 0; $i < count($estadoAtuacao); $i++) {
-                $estadoAtuacaozz = $utils->localeToCode($estadoAtuacao[$i], 'estado');
-                $cidadeAtuacaozz = $utils->localeToCode($cidadeAtuacao[$i], 'cidade');
+                if ($estadoAtuacao[$i] != "" || $cidadeAtuacao[$i] != "") {
+                    $estadoAtuacaozz = $utils->localeToCode($estadoAtuacao[$i], 'estado');
+                    $cidadeAtuacaozz = $utils->localeToCode($cidadeAtuacao[$i], 'cidade');
+                }
                 if ($estadoAtuacaozz != 0)
                 $localeArr[$cidadeAtuacaozz] = $estadoAtuacaozz;
             }
@@ -298,11 +299,138 @@ class usuario {
     public function set($config, $currentId, $value) {
         $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
 
-        switch ($config) {
-            case 'tema': $sql = "UPDATE tb_configs SET cd_theme = '$value' WHERE cd_usuario = '$currentId'"; break;
-            case 'nivel': $sql = "UPDATE tb_configs SET qt_nivel = '$value' WHERE cd_usuario = '$currentId'"; break;
-            case 'premium': $sql = "UPDATE tb_configs SET ic_premium = '$value' WHERE cd_usuario = '$currentId'"; break;
-            case 'material': $sql = "UPDATE tb_configs SET qt_material = '$value' WHERE cd_usuario = '$currentId'"; break;
+        $col = $config == "xp" ? "ds_xp" : false;
+        $col = $config == "tema" ? "cd_theme" : false;
+        $col = $config == "nivel" ? "qt_nivel" : false;
+        $col = $config == "premium" ? "ic_premium" : false;
+        $col = $config == "material" ? "qt_material" : false;
+
+        if ($col)
+            $sql = "UPDATE tb_configs SET $col = '$value' WHERE cd_usuario = '$currentId'";
+        
+        
+        if ($col && $mysqli->query($sql)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getImage($currentId) {
+        include_once 'class.utils.php';
+        $utils = new utils();
+
+        $dir = "images/user_photos/$currentId/";
+        $photo = "unknown";
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                while (($file = readdir($dh)) !== false) {
+                    if ($file != "." && $file != "..")
+                    $photo = $file;
+                }
+                closedir($dh);
+                
+            }
+        }
+        $img = !file_exists($dir.$photo) ? "images/no-avatar.png" : $dir.$photo;
+
+        if ($img)
+        $img = $utils->hashnator($img);
+
+        return $img;
+    }
+
+    public function getElo($currentId) {
+
+        $lvl = $this->consultar('nivel', $currentId);
+
+        $eloList = [
+            'iniciante',
+            'natureza',
+            'estrela',
+            'aurora',
+            'lotus',
+            'kraken',
+            'gaia'
+        ];
+        
+        if ($lvl <= 5) {
+            $elo = $eloList[0];
+        } else if ($lvl <= 10) {
+            $elo = $eloList[1];
+        } else if ($lvl <= 20) {
+            $elo = $eloList[2];
+        } else if ($lvl <= 35) {
+            $elo = $eloList[3];
+        } else if ($lvl <= 55) {
+            $elo = $eloList[4];
+        } else if ($lvl <= 80) {
+            $elo = $eloList[5];
+        } else if ($lvl > 80) {
+            $elo = $eloList[6];
+        }
+
+        $selo = ucwords($elo);
+
+        return [
+            'elo' => $elo,
+            'selo' => $selo,
+        ];
+        
+    }
+
+    public function getReviews($currentId) {
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+
+        $reviewList = [];
+
+        $sql = "SELECT * FROM tb_reviews WHERE cd_to='$currentId' ORDER BY dt_review DESC";
+
+        $query = $mysqli->query($sql);
+
+        $count = $query->num_rows;
+
+        if ($count > 0) {
+            foreach($query as $review) {
+                array_push($reviewList, [
+                    'id' => $review['cd_review'],
+                    'to' => $review['cd_to'],
+                    'from' => $review['cd_from'],
+                    'msg' => $review['ds_review'],
+                    'stars' => $review['ds_review_stars'],
+                    'date' => $review['dt_review']
+                ]);
+            }
+        }
+
+        return $reviewList;
+    }
+
+    public function subirDeNivel($newXp = 0, $currentId) {
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+
+        $lvl = $this->consultar('nivel', $currentId);
+        $mat = $this->consultar('material', $currentId);
+        $xp = $this->consultar('xp', $currentId);
+        
+        $need = (1/3) * (pow($lvl, 3) - 6 * pow($lvl, 2) + 17 * $lvl - 12);
+        $need = $lvl == 1 ? 1 : $need;
+        
+        $mat = $mat + $newXp;
+
+        
+        if ($xp + $newXp >= $need) {
+            //se upar, pega a diferença entre o XP total e a soma do XP atual com o XP adicionado
+            //faz update dessa diferença na coluna XP do user e faz um ++ na coluna de nível do usuario
+            
+            $xp = ($xp + $newXp) - ($need);
+            $lvl++;
+            $sql = "UPDATE tb_configs SET qt_material = '$mat', ds_xp = '$xp', qt_nivel = '$lvl' WHERE cd_usuario = '$currentId'";
+            
+        } else {
+            //se n upar, soma XP atual com XP adicionado e faz update
+            $xp = $xp + $newXp;
+            $sql = "UPDATE tb_configs SET qt_material = '$mat', ds_xp = '$xp' WHERE cd_usuario = '$currentId'";
         }
         
         if ($mysqli->query($sql)) {
@@ -310,12 +438,14 @@ class usuario {
         } else {
             return false;
         }
+
     }
 
     public function consultar($info, $currentId) {
         $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
 
         switch ($info) {
+            case 'xp': $sql = "SELECT ds_xp FROM tb_configs WHERE cd_usuario='$currentId'"; break;
             case 'rua': $sql = "SELECT ds_rua FROM tb_enderecos WHERE cd_usuario='$currentId'"; break;
             case 'cep': $sql = "SELECT ds_cep FROM tb_enderecos WHERE cd_usuario='$currentId'"; break;
             case 'tipo': $sql = "SELECT cd_tipo FROM tb_usuarios WHERE cd_usuario='$currentId'"; break;

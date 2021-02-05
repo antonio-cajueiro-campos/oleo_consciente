@@ -53,4 +53,13 @@ INSERT INTO tb_configs (cd_usuario, ds_theme, ic_premium, qt_material) VALUES ('
 INSERT INTO tb_descartes (cd_descarte, cd_usuario, ds_descarte, qt_descarte, ic_taxa, ic_disponibilidade, dt_criacao) VALUES ('0', '7', 'blablabla1', '8', '0', '1', '2020-10-10');
 INSERT INTO tb_descartes (cd_descarte, cd_usuario, ds_descarte, qt_descarte, ic_taxa, ic_disponibilidade, dt_criacao) VALUES ('1', '7', 'blablabla2', '10', '0', '1', '2020-11-11');
 
+
+
+INSERT INTO tb_reviews (cd_review, cd_to, cd_from, ds_review, dt_review, ds_review_stars) VALUES ('1', '13', '17', 'Nota 10 pro pessoal da coleta!', '2021-02-01', '5');
+INSERT INTO tb_reviews (cd_review, cd_to, cd_from, ds_review, dt_review, ds_review_stars) VALUES ('2', '13', '14', 'Outro dia de coleta!', '2021-01-20', '4');
+INSERT INTO tb_reviews (cd_review, cd_to, cd_from, ds_review, dt_review, ds_review_stars) VALUES ('3', '13', '18', 'Melhoraram no atendimento!', '2021-01-03', '5');
+INSERT INTO tb_reviews (cd_review, cd_to, cd_from, ds_review, dt_review, ds_review_stars) VALUES ('4', '13', '14', 'Gostei, bem simpáticos!', '2020-12-25', '4');
+INSERT INTO tb_reviews (cd_review, cd_to, cd_from, ds_review, dt_review, ds_review_stars) VALUES ('5', '13', '18', 'Foram meio rude :(  mas eficientes', '2020-11-04', '2');
+INSERT INTO tb_reviews (cd_review, cd_to, cd_from, ds_review, dt_review, ds_review_stars) VALUES ('6', '14', '13', '', '2021-01-01', '5');
+
 -- ========================= END INSERTS ======================

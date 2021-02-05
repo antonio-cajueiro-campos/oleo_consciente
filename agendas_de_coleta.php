@@ -42,7 +42,7 @@ if (isset($_GET['agendaConfig'])) {
                     $cidade = "Estado inteiro";
                 }
 
-                $dtColeta = inverteData($dtColeta);
+                $dtColeta = $utils->inverteData($dtColeta);
 
                 $sql = "SELECT cd_descarte FROM tb_descartes WHERE cd_agenda='$agendaId'";
                 $query = mysqli_query($conectar, $sql);

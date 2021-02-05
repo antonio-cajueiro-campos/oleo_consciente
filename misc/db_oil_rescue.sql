@@ -60,6 +60,8 @@ CREATE TABLE tb_configs (
     ic_premium BOOLEAN,
     qt_material FLOAT(10),
     qt_nivel INT,
+    ds_atuacao VARCHAR(79),
+    ds_xp FLOAT(10),
 
     CONSTRAINT pk_config_do_usuario
     PRIMARY KEY (cd_usuario)
@@ -116,6 +118,19 @@ CREATE TABLE tb_enderecos (
     REFERENCES tb_usuarios (cd_usuario)
 );
 
+CREATE TABLE tb_reviews (
+    cd_review INT NOT NULL,
+    cd_to INT NOT NULL,
+    cd_from INT NOT NULL,
+    ds_review VARCHAR(400),
+    dt_review TIMESTAMP,
+    ds_review_stars FLOAT,
+        
+    -- constraints
+    CONSTRAINT pk_review
+    PRIMARY KEY (cd_review)
+);
+
 CREATE TABLE tb_estados (
     cd_estado INT NOT NULL,
     nm_estado VARCHAR(20),
@@ -150,7 +165,7 @@ CREATE EVENT expireAgenda
       BEGIN
         DECLARE done INT DEFAULT 0;
         DECLARE id INT;
-        DECLARE cur1 CURSOR FOR SELECT cd_agenda FROM tb_agendas_de_coleta WHERE dt_coleta < NOW();
+        DECLARE cur1 CURSOR FOR SELECT cd_agenda FROM tb_agendas WHERE dt_coleta < NOW();
         DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
         SET id = 0;
 	    OPEN cur1;

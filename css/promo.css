@@ -1,0 +1,55 @@
+table {
+	width: 80%;
+	margin: 0 auto;
+}
+.promo {
+	text-align: center;
+	padding: 50px 0 300px 0;
+}
+.p-promo {
+	color: black;
+	margin: 0 auto 70px auto;
+}
+.account-pro-ad {
+	margin: 0 auto;
+	width: 80%;
+}
+.account-pro-ad-img {
+	width: 100%;
+}
+table, td, th, tr {
+	border: 2px solid rgb(221, 221, 221);
+}
+
+.doarbtn {
+	margin: 20px auto;
+	padding: 10px 45px;
+	text-transform: uppercase;
+	margin: 60px 0;
+}
+.resp {
+	height: 50px;
+	width: 196px;
+	text-align: center;
+	border: black 3px solid;
+	font-size: 25px;
+}
+
+.quest {
+	height: 50px;
+	text-align: center;
+	border-left: transparent solid 2px;
+}
+
+.resp.ry {
+	background-color: #77DB88;
+}
+
+.resp.rn {
+	background-color: #FF5050;
+}
+
+.thead {
+	text-align: center;
+	border-top: transparent solid 2px;
+}

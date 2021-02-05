@@ -1,0 +1,6 @@
+{
+    "require": {
+        "zeindelf/badwords": "^1.0",
+        "gregwar/image": "^2.0"
+    }
+}

@@ -34,18 +34,20 @@
 
 .label-perfil {
     position: relative;
-    margin: 0 0 0 0;
+    margin: 0;
+    width: 170px;
+    height: 172px;
 }
 
-.label-perfil:hover {
+.user-pfp.label-perfil:hover {
     cursor: pointer;
 }
 
-.label-perfil:hover > img {
+.user-pfp.label-perfil:hover > .profile-picture {
     filter: blur(1px);
 }
 
-.label-perfil:hover:after {
+.user-pfp.label-perfil:hover:after {
     content: 'ALTERAR FOTO';
     color: black;
     position: absolute;
@@ -53,4 +55,29 @@
     left: 0;
     font-size: 10px;
     font-weight: bold;
+}
+
+
+.picrow, .selorow {
+    height: 185px;
+}
+
+.infoblock, .perfilblock {
+    margin:  0 0 20px 0;
+}
+
+#removePic {
+    background-color: rgb(253, 239, 239);
+}
+
+#removePic:hover {
+    background-color: rgb(255, 218, 218);
+}
+
+#changePic {
+    background-color: rgb(240, 253, 239);
+}
+
+#changePic:hover {
+    background-color: rgb(218, 255, 220);
 }

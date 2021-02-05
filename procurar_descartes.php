@@ -55,7 +55,7 @@
                 $descarteDesc = $descarte['ds_descarte'];
                 $descarteQt = $descarte['qt_descarte'];
                 $data = $descarte['dt_criacao'];
-                $data = inverteData($data);
+                $data = $utils->inverteData($data);
                 $estado = $utils->convertUf($estado, 'reverse');
     
                 $sql = "SELECT ds_bairro FROM tb_enderecos WHERE cd_usuario = '$usuario'";

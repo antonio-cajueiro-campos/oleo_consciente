@@ -63,7 +63,7 @@
                     $usuarioId = $descarteItem['cd_usuario'];
                     $descarteDesc = $descarteItem['ds_descarte'];
                     $descarteQt = $descarteItem['qt_descarte'];
-                    $dataColeta = inverteData($dataColeta);
+                    $dataColeta = $utils->inverteData($dataColeta);
                     echo "Caro $nome_usuario a empresa <a style=text-decoration:underline href=perfil.php?user=$empresa>$empresaNome#$empresa</a> está solicitando uma coleta do seu descarte#$descarteId no dia $dataColeta das $horaInicial às $horaFinal, você aceita agendar essa coleta?";
                     echo "<form action='php/verificar_coleta.php' method=\"post\">
                     <input type=hidden name=agendaId value=$agendaId>

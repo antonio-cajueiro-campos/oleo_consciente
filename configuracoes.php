@@ -116,7 +116,7 @@
 </ul>
 
 <div class="contentBox configContent">
-<form action="" method="post" onsubmit="updateCheck();return false;" autocomplete="off">
+<form action="" method="post" onsubmit="updateCheck();return false;" autocomplete="off" novalidate>
 <div class="tab-content configClassPanel">
     <div class="tab-pane container active" id="endereco">
         <div class="row configRow">

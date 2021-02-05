@@ -266,5 +266,29 @@
 	{
 	  "id": 66,
 	  "msg": "Existem agendas utilizando esta atuação!"
+	},
+	{
+	  "id": 67,
+	  "msg": "Foto alterada com sucesso!"
+	},
+	{
+	  "id": 68,
+	  "msg": "Arquivo excedeu seu limite de peso (5MB)!"
+	},
+	{
+	  "id": 69,
+	  "msg": "Formato de arquivo inválido."
+	},
+	{
+	  "id": 70,
+	  "msg": "Arquivo inválido"
+	},
+	{
+	  "id": 71,
+	  "msg": "Review excluído com sucesso"
+	},
+	{
+	  "id": 72,
+	  "msg": "Review enviado com sucesso"
 	}
 ]

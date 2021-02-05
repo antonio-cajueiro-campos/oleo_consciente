@@ -18,7 +18,7 @@
     </ol>
 </nav>
 <div class="row-12">
-<div class="col descartePage">
+<div class="col descartePage contentBox">
 <?php
     //ID: 0 Descartador Empresa
     //ID: 1 Descartador Pessoa
@@ -84,7 +84,7 @@
             
             $descarteData = $row['dt_criacao'];
 
-            $descarteData = inverteData($descarteData);
+            $descarteData = $utils->inverteData($descarteData);
             
             if (isset($_POST['solicitar'])) {
                 if (isset($_GET['id']) && !empty($_GET['id'])) {
@@ -162,7 +162,7 @@
             $horaFinal = $row['hr_final'];
             $horaInicial = substr($horaInicial, 0, 5);
             $horaFinal = substr($horaFinal, 0, 5);
-            $dataColeta = inverteData($dataColeta);
+            $dataColeta = $utils->inverteData($dataColeta);
             $sql = "SELECT nm_usuario FROM tb_usuarios WHERE cd_usuario = '$coletorId'";
             $query = $mysqli->query($sql);
             $row = $query->fetch_array(MYSQLI_ASSOC);
@@ -177,7 +177,7 @@ if ($status == 0 && $currentId != $coletorId && $currentId != $userId) {
 <form method=post>
     <div class="row-12">
         <div class="col text-center text-dark descarteTitulo">
-            <h3>
+            <h3 class="descartePageTitle">
                 <strong>
                     Cartão de descarte#<?php echo $descarte; ?>
                 </strong>

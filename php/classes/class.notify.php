@@ -40,9 +40,34 @@ class notify {
         return false;        
     }
 
+    public function pertence($notifyId, $from, $to) {
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+
+        $sql = "SELECT cd_notify FROM tb_notify WHERE cd_notify='$notifyId' AND cd_destinatario = '$from' AND cd_remetente = '$to'";
+
+        $query = $mysqli->query($sql);
+        $count = $query->num_rows;
+        if ($count > 0)
+            return true;
+        else
+            return false; 
+    }
+
     public function consultar($descarteId) {
         $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
         $sql = "SELECT * FROM tb_notify WHERE cd_descarte = '$descarteId'";
+        $query = $mysqli->query($sql);
+        $count = $query->num_rows;
+        if ($count > 0) {
+            return $query->fetch_array(MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function consultarNotify($notifyId) {
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+        $sql = "SELECT * FROM tb_notify WHERE cd_notify = '$notifyId'";
         $query = $mysqli->query($sql);
         $count = $query->num_rows;
         if ($count > 0) {

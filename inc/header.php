@@ -3,7 +3,7 @@
     $main = new main();
     
     $themeset = 0;
-    
+    $currentId = -1;
     //verificando conta
     if (isset($_SESSION['sessao'])) {
         $currentId = $_SESSION['sessao'];
@@ -22,7 +22,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <!--Desenvolvido por Antonio, Caio, Felipe, Tiago e Flávia -->
+    <!-- Desenvolvido por Antonio, Caio, Felipe e Tiago -->
     <meta charset="UTF-8">
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -57,7 +57,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
-    <script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript" src="<?php echo $utils->hashnator("js/functions.js"); ?>"></script>
 </head>
 <body>
 <div class="progress loading" id="progress">

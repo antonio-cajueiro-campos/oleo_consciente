@@ -34,36 +34,76 @@
     </div>
     <div class="row-12 text-center">
       <div class="top-10">
-        <h5 class=contentTitle>Veja os usuários de maior nível!</h5>
+        <h5 class=contentTitle>Veja os 10 usuários de maior nível!</h5>
       </div>
     </div>
     <div class="swiper-container">
       <div class="swiper-wrapper">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
-        <img class="swiper-slide" src="images/personalCardSample.png" alt="" srcset="">
+        <?php
+        //"SELECT * FROM tb_descartes AS d JOIN tb_enderecos AS e ON d.cd_usuario = e.cd_usuario WHERE e.cd_estado = '$estado' AND e.cd_cidade = '$cidade' ORDER BY cd_descarte DESC LIMIT $pagina, $qt_por_pagina";
+          $sql = "SELECT qt_nivel, cd_usuario FROM tb_configs ORDER BY qt_nivel DESC LIMIT 10";
+          $query = $mysqli->query($sql);
+          $qtUsers = $query->num_rows;
+          $ii = 0;
+          if ($qtUsers > 0) {
+            foreach ($query as $user) {
+              $sliderLevel = $user['qt_nivel'];
+              $sliderId = $user['cd_usuario'];
+              $sliderElo = $usuario->getElo($sliderId);
+              $sliderElo = $sliderElo['elo'];
+              $sliderPicture = $usuario->getImage($sliderId);
+              $sliderUsername = $usuario->consultar('nome', $sliderId);
+              $sliderUsernameArr = explode(' ', $sliderUsername);
+              $sliderUsername = $sliderUsernameArr[0];
+              $material = $usuario->consultar('material', $sliderId);
+              $material_agua = $utils->organizeMaterial($material);
+              $crown = "";
+              if ($ii == 0) {
+                $crown = "<img class=swiperCrown src='images/crown.png'>";
+              }
+              $ii++;
+
+              $template = "
+              <div class='swiper-slide'>
+                <a href=perfil.php?user=$sliderId>
+                  <div class='swiperProfile'>
+                    <img class='sliderPicture' src='$sliderPicture' alt='profile picture'>
+                    <img class='sliderBorder' src='images/bordas/$sliderElo-border.png' alt='profile border'>
+                    <span class='sliderLevel'>$sliderLevel</span>
+                    $crown
+                  </div>
+                  <div class='swiperInfo'>
+                    <div class='swiperName'>$sliderUsername</div>
+                    <div class='swiperMaterial'>Já salvou cerca de $material_agua litros de água!</div>
+                  </div>
+                </a>
+              </div>
+              ";
+
+              echo $template;
+            }
+          }
+        ?>
       </div>
+      <!-- div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div> -->
     </div>
   <!-- <div class="swiper-pagination"></div> -->
 
   <!-- Swiper JS -->
   <script src="js/swiper-bundle.min.js"></script>
-
   <!-- Initialize Swiper -->
   <script>
     var swiper = new Swiper('.swiper-container', {
-      slidesPerView: 7,
+      slidesPerView: 5,
       spaceBetween: 15,
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
       },
     });
   </script>
