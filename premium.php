@@ -13,7 +13,7 @@
 <div class="contentBox promo">
 
 <h4>Adquira uma conta Premium!</h4>
-<p class=p-promo>Você também pode adquirir uma conta premium com mais recursos, basta fazer uma doação de qualquer quantia</p>
+<p class=p-promo>Você também pode adquirir uma conta premium com mais recursos, basta fazer uma doação de qualquer quantia.</p>
 
 
 <table>

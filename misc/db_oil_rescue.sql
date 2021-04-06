@@ -113,9 +113,8 @@ CREATE TABLE tb_enderecos (
     ds_cep CHAR(8),
 
     -- constraints
-    CONSTRAINT fk_endereco_do_usuario
-    FOREIGN KEY (cd_usuario)
-    REFERENCES tb_usuarios (cd_usuario)
+    CONSTRAINT pk_endereco_do_usuario
+    PRIMARY KEY (cd_usuario)
 );
 
 CREATE TABLE tb_reviews (

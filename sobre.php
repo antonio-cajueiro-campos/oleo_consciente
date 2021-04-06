@@ -7,6 +7,17 @@
         <li class="breadcrumb-item active" aria-current="page"><?php echo $nome_pagina;?></li>
     </ol>
 </nav>
+<style>
+.fe {
+    opacity: .8;
+}
+</style>
+<div class="container contentBox">
+    <p class="fe">FELIPE NO PROJETO</p>
+</div>
+<section class="about">
+    
+</section>
 
 </div>
 <!-- ========== Conteúdo termina aqui ========== -->

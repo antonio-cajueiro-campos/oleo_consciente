@@ -138,10 +138,10 @@
                 $descarteDs = "Sem observação...";
             }
         } else {
-            echo "<h4>Erro ao carregar página, link quebrado</h4>";
+            echo "<script>location.href = 'index.php'</script>";
         }
     } else {
-        echo "<h4>Erro ao carregar página, link quebrado</h4>";
+        echo "<script>location.href = 'index.php'</script>";
     }
 
     $coletorId = 0;

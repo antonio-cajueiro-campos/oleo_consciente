@@ -61,9 +61,9 @@
     <div class="tab-content fundo-conteudo-perfil espaco2 contentBox">
         <div class="tab-pane container active ">
             <div class="row">
-                <div class="col-md-6 perfilblock">
+                <div class="col-lg-6 perfilblock">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-lg-6">
                             <div class="row-12 text-center picrow" <?php if ($userPage == $currentId) echo "data-toggle=dropdown"; ?>>
                                 <label for="profile-picture" class="label-perfil <?php if ($userPage == $currentId) echo "user-pfp"; ?>">
                                     <img class="profile-picture" id="pfp" src="<?php echo $img; ?>">
@@ -80,7 +80,7 @@
                                 <p class="p-perfil"><?php $max = 15; if (strlen($nome) > $max) { echo substr($nome, 0, $max)."..."; } else { echo $nome; } ?></p>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-lg-6">
                             <div class="row-12 text-center selorow">
                                 <img src="images/selos/<?php echo $elo; ?>-selo.png" width="170" height="170">
                             </div>
@@ -96,7 +96,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 infoblock">
+                <div class="col-lg-6 infoblock">
                     <ul class="list-group">
                         <li class="list-group-item li-perfil">Já salvou cerca de <?php echo $material_agua;?> litros de água</li>
                         <li class="list-group-item li-perfil">Está no nível <?php echo $lvl ?></li>

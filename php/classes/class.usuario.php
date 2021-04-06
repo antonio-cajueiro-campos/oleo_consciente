@@ -482,6 +482,30 @@ class usuario {
         return $row[0];
     }
 
+    public function consultarEnderecoFormatado($currentId) {
+        include_once 'class.utils.php';
+        $utils = new utils();
+
+        $cidade = $this->consultar('cidade', $currentId);
+        $estado = $this->consultar('estado', $currentId);
+        $bairro = $this->consultar('bairro', $currentId);
+        $cep = $this->consultar('cep', $currentId);
+        $numero = $this->consultar('numero', $currentId);
+        $rua = $this->consultar('rua', $currentId);
+
+        $cidade = $utils->codeToLocale($cidade, 'cidade');
+        $estado = $utils->codeToLocale($estado, 'estado');
+        $estado = $utils->convertUf($estado, 'reverse');
+
+        return "$rua, $numero - $bairro, $cidade - $estado, $cep";
+    }
+
+    public function getAgendas($currentId) {
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+        $sql = "SELECT * FROM tb_agendas WHERE cd_usuario='$currentId'";
+        return $mysqli->query($sql);
+    }
+
     public function logar($login, $senha) {
         include_once 'class.utils.php';
         $utils = new utils();

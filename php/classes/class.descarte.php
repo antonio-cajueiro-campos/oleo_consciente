@@ -112,5 +112,31 @@ class descarte {
         return $value;
 
     }
+
+    public function consultarLocal($descarteId) {
+        include_once 'class.usuario.php';
+        include_once 'class.utils.php';
+        $usuario = new usuario();
+        $utils = new utils();
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+
+        $sql = "SELECT cd_usuario FROM tb_descartes WHERE cd_descarte = '$descarteId' ORDER BY cd_usuario DESC";
+        $query = $mysqli->query($sql);
+        $descarte = $query->fetch_array(MYSQLI_ASSOC);
+        $donoId = $descarte['cd_usuario'];
+
+        $cidade = $usuario->consultar('cidade', $descarte['cd_usuario']);
+        $estado = $usuario->consultar('estado', $descarte['cd_usuario']);
+        $bairro = $usuario->consultar('bairro', $descarte['cd_usuario']);
+        $cep = $usuario->consultar('cep', $descarte['cd_usuario']);
+        $numero = $usuario->consultar('numero', $descarte['cd_usuario']);
+        $rua = $usuario->consultar('rua', $descarte['cd_usuario']);
+
+        $cidade = $utils->codeToLocale($cidade, 'cidade');
+        $estado = $utils->codeToLocale($estado, 'estado');
+        $estado = $utils->convertUf($estado, 'reverse');
+
+        return $descarteAddress = "$rua, $numero - $bairro, $cidade - $estado, $cep";
+    }
 }
 ?>

@@ -62,13 +62,16 @@
                         echo "<a href=procurar_descartes.php?agenda=$agendaId&p=0><i class='fa fa-plus rightPlusAgendaList' aria-hidden=true></i></a>";
                         echo "</span>";
                     }
+                    $userColetaClickableStyle = $tipoSelf == 2 ? 'userColetaClickable' : '';
+                    $userColetaClickable = $tipoSelf == 2 ? 'clickable-row' : '';
+                    $userColetaFunction = $tipoSelf == 2 ? "onclick" : "data-null";
                     echo "<table class=\"table table-striped table-light\">
                     <thead>
                         <tr>
                             <th scope=\"col\">#</th>
                             <th scope=\"col\">Litros</th>
-                            <th scope=\"col\">Bairro</th>
                             <th scope=\"col\">Nome</th>
+                            <th scope=\"col\">Bairro</th>
                         </tr>
                     </thead>
                     <tbody>";
@@ -81,11 +84,11 @@
                         $bairro = $row['ds_bairro'];
                         $quantidade = $row['qt_descarte'];
                         $nome = $row['nm_usuario'];                        
-                        echo "<tr class='clickable-row' data-href='descarte.php?id=$descarteId&agenda=$agendaId' onclick='itemColeta($descarteId, $agendaId)'>";
+                        echo "<tr class='$userColetaClickable $userColetaClickableStyle' data-href='descarte.php?id=$descarteId&agenda=$agendaId' $userColetaFunction='itemColeta($descarteId, $agendaId)'>";
                             echo "<th scope=\"row\">$descarteId</th>";
                             echo "<td>$quantidade</td>";
-                            echo "<td>$bairro</td>";
                             echo "<td>$nome</td>";
+                            echo "<td>$bairro</td>";
                             if ($agendaEmpresa == $currentId)
                             echo "<td class=rightOutAgenda><div onclick='systemPopup(9, $descarteId)'><i class=\"fa fa-sign-out rightOutAgendaItem\" aria-hidden=\"true\"></i></div></td>";
                         echo "</tr>";                        

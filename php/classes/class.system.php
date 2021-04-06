@@ -1,7 +1,8 @@
 <?php
 class system {
     private $CREATORS = "Antonio, Tiago, Caio, Felipe";
-    private $GVERIFY = "";
+    private $GVERIFY = "asd";
+    private $GAPI = "AIzaSyBJEkpVUL0wPCzhE0WKGUs97PqMWaDpa_c";
     
     private $ht = "";
     private $lg = "";
@@ -50,6 +51,10 @@ class system {
 
     public function getGverify(){
         return $this->GVERIFY;
+    }
+
+    public function getGapi(){
+        return $this->GAPI;
     }
 }
 ?>

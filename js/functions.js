@@ -439,9 +439,7 @@ function updateCheckTrue(login, password, passwordNew, nome, email, estado, cida
     verifyConfig();
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function configSaveDisabled() {
     $(document).ready(async function() {

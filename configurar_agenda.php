@@ -5,9 +5,10 @@
 <nav aria-label="breadcrumb" class="breadcrumb-main">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a class="breadcrum-a" href="index.php">Início</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?php echo $nome_pagina;?></li>
+        <li class="breadcrumb-item active" aria-current="page"><?php echo $nome_pagina."#";?><?= isset($_GET['id']) || $_GET['id'] != "" ? $_GET['id'] : "Erro" ;?></li>
     </ol>
 </nav>
+<div class="container contentBox agendaConfiguration">
 <?php
 include_once 'php/classes/class.utils.php';
 $utils = new utils();
@@ -74,14 +75,14 @@ if (isset($_GET['id'])){
             $row = mysqli_fetch_array($query);
         ?>
             <form action="" method="post">
-                <div class="row">
-                <div class="col-md-2"></div>
-                    <div class="col-md-4">
+                <div class="row spaceAgendaConfig">
+                <div class="col-lg-2"></div>
+                    <div class="col-lg-4">
                         <div class="row-12">
                             <label for="agenda">Local que será efetuado a coleta: </label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <div class="row-12 text-dark">
                             <select class="custom-select mr-sm-2 regiao" id="agenda" name="agenda">
                                 <?php
@@ -112,57 +113,65 @@ if (isset($_GET['id'])){
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4">
+                <div class="row spaceAgendaConfig">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-4">
                         <div class="row-12">
                             <label for="data">Dia de coleta da agenda:</label>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <div class="row-12 text-dark">
                             <input required type="date" name="data" id="data" class="form-control" value='<?php echo $dataProxima;?>' min="<?php echo $dataAtual;?>">
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4">
+                <div class="row spaceAgendaConfig">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-4">
                         <div class="row-12">
-                            <label>Selecione o intervalo de horas de coleta</label>
+                            <label>Selecione a hora da coleta:</label>
                         </div>
                     </div>
-                    <div class="col-md-4 text-center"> Das:
-                        <select required  class='form-control hrAgenda' name="hrInicial" id="">
-                            <option value="06:00:00">06:00</option>
-                            <option value="08:00:00">08:00</option>
-                            <option value="10:00:00">10:00</option>
-                            <option value="12:00:00">12:00</option>
-                            <option value="14:00:00">14:00</option>
-                            <option value="16:00:00">16:00</option>
-                            <option value="18:00:00">18:00</option>
-                            <option value="20:00:00">20:00</option>
-                        </select> Às: 
-                        <select required class='form-control hrAgenda' name="hrFinal" id="">
-                            <option value="08:00:00">08:00</option>
-                            <option value="10:00:00">10:00</option>
-                            <option value="12:00:00">12:00</option>
-                            <option value="14:00:00">14:00</option>
-                            <option value="16:00:00">16:00</option>
-                            <option value="18:00:00">18:00</option>
-                            <option value="20:00:00">20:00</option>
-                            <option value="22:00:00">22:00</option>
-                        </select>
+                    <div class="col-lg-4 horasAgendaConfig text-center">
+                        <div class="row hrajustespace">
+                            <div class="col-6">
+                                <label for="das">Das:&nbsp;&nbsp;</label>
+                                <select required  class='form-control hrAgenda' name="hrInicial" id="das">
+                                    <option value="06:00:00">06:00</option>
+                                    <option value="08:00:00">08:00</option>
+                                    <option value="10:00:00">10:00</option>
+                                    <option value="12:00:00">12:00</option>
+                                    <option value="14:00:00">14:00</option>
+                                    <option value="16:00:00">16:00</option>
+                                    <option value="18:00:00">18:00</option>
+                                    <option value="20:00:00">20:00</option>
+                                </select>    
+                            </div>
+                            <div class="col-6">
+                                <label for="as">&nbsp;&nbsp;Às:&nbsp;&nbsp;</label>
+                                <select required class='form-control hrAgenda' name="hrFinal" id="as">
+                                    <option value="08:00:00">08:00</option>
+                                    <option value="10:00:00">10:00</option>
+                                    <option value="12:00:00">12:00</option>
+                                    <option value="14:00:00">14:00</option>
+                                    <option value="16:00:00">16:00</option>
+                                    <option value="18:00:00">18:00</option>
+                                    <option value="20:00:00">20:00</option>
+                                    <option value="22:00:00">22:00</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4">
+                <div class="row spaceAgendaConfig">
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-4">
                         <div class="row-12">
-                            <label>Quantidade máxima de cartões</label>
+                            <label>Quantidade máxima de cartões:</label>
                         </div>
                     </div>
-                    <div class="col-md-4 text-center">
+                    <div class="col-lg-4 text-center">
                         <select required class='form-control' name="max" id="">
                             <option value="10">10</option>
                             <option value="20">20</option>
@@ -175,7 +184,7 @@ if (isset($_GET['id'])){
                         </select>
                     </div>
                 </div>
-                <div class="row-12">
+                <div class="row-12 spaceAgendaConfig">
                     <div class="col text-center">
                         <input type="submit" value="Salvar configurações" name="salvarAgenda" class="btn btn-success">
                     </div>
@@ -192,7 +201,7 @@ if (isset($_GET['id'])){
     echo "Agenda não selecionada";
 }
 ?>
-
+</div>
 </div>
 <!-- ========== Conteúdo termina aqui ========== -->
 <?php include 'inc/footer.php'?>

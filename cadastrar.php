@@ -10,7 +10,8 @@
             <li class="breadcrumb-item active" aria-current="page"><?php echo $nome_pagina;?></li>
         </ol>
     </nav>
-        <div class="row">
+    <div class="container contentBox">
+        <div class="row spacex">
             <div class="col-lg-6 desccol text-center">
                 <div class="button-select" onclick="switchMode('descarte')" id="button-desc">DESCARTE</div>
             </div>
@@ -19,7 +20,7 @@
             </div>
         </div>
         
-        <div class="row">
+        <div class="row inputbg">
             <div class="col-3">
                 <div class="ads"></div>
             </div>
@@ -248,6 +249,7 @@
                 <div class="ads"></div>
             </div>
         </div>
+    </div>
     </div>
     
     <script src="js/jquery.mask.min.js"></script>

@@ -68,8 +68,19 @@ class agenda {
     public function consultar($agendaId) {
         $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
         $sql = "SELECT * FROM tb_agendas WHERE cd_agenda = '$agendaId'";
-        $query = $mysqli->query($sql);
-        return $query->fetch_array(MYSQLI_ASSOC);
+        if ($query = $mysqli->query($sql)) {
+            return $query->fetch_array(MYSQLI_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function consultarDescartesCidade($cidadeId) {
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+        $sql = "SELECT descar.cd_descarte FROM tb_descartes as descar
+        JOIN tb_enderecos as addr ON descar.cd_usuario = addr.cd_usuario
+        WHERE cd_cidade = '$cidadeId'";
+        return $mysqli->query($sql);
     }
 }
 ?>

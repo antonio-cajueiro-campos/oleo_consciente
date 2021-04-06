@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'Gregwar\\Image' => array($vendorDir . '/gregwar/image'),
     'Gregwar\\Cache' => array($vendorDir . '/gregwar/cache'),
+    'Evenement' => array($vendorDir . '/evenement/evenement/src'),
 );

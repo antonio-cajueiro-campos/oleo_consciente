@@ -26,38 +26,39 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="author" content="<?php echo $system->getCreators(); ?>">
-    <meta name="copyright" content="<?php echo $system->getCreators(); ?>">
+    <meta name="author" content="<?= $system->getCreators(); ?>">
+    <meta name="copyright" content="<?= $system->getCreators(); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#428542">
     <?php echo "<title>$nome_pagina - $system->nome_site</title>"; ?>
 
     <!-- Editar posteriormente -->
-    <meta name="e-mail" content="<?php echo $system->site_email; ?>">
-    <meta name="keywords" content="<?php echo $system->page_keywords; ?>">
-    <meta name="description" content="<?php echo $system->page_desc; ?>">
-    <meta name="Abstract" content="<?php echo $system->page_abstract; ?>">
-    <meta name="google-site-verification" content="<?php echo $system->getGverify(); ?>">
-    <link rel="canonical" href="<?php echo $system->site_address; ?>">
+    <meta name="e-mail" content="<?= $system->site_email; ?>">
+    <meta name="keywords" content="<?= $system->page_keywords; ?>">
+    <meta name="description" content="<?= $system->page_desc; ?>">
+    <meta name="Abstract" content="<?= $system->page_abstract; ?>">
+    <meta name="google-site-verification" content="<?= $system->getGverify(); ?>">
+    <link rel="canonical" href="<?= $system->site_address; ?>">
 
     <!-- CSS Sheets -->
     <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="<?php echo $utils->hashnator("css/reset.css"); ?>">
-    <link rel="stylesheet" href="<?php echo $utils->hashnator("css/global.css"); ?>">
+    <link rel="stylesheet" href="<?= $utils->hashnator("css/reset.css"); ?>">
+    <link rel="stylesheet" href="<?= $utils->hashnator("css/global.css"); ?>">
     
     <!-- CSS Personal Sheets -->
-    <link rel="stylesheet" href="<?php echo $utils->hashnator("css/personal/antonio.css"); ?>">
-    <link rel="stylesheet" href="<?php echo $utils->hashnator("css/personal/caio.css"); ?>">
-    <link rel="stylesheet" href="<?php echo $utils->hashnator("css/personal/felipe.css"); ?>">
-    <link rel="stylesheet" href="<?php echo $utils->hashnator("css/personal/tiago.css"); ?>">
+    <link rel="stylesheet" href="<?= $utils->hashnator("css/personal/antonio.css"); ?>">
+    <link rel="stylesheet" href="<?= $utils->hashnator("css/personal/caio.css"); ?>">
+    <link rel="stylesheet" href="<?= $utils->hashnator("css/personal/felipe.css"); ?>">
+    <link rel="stylesheet" href="<?= $utils->hashnator("css/personal/tiago.css"); ?>">
 
-    <link rel="stylesheet" href="<?php echo $utils->hashnator("themes/$theme/style.css"); ?>">
+    <link rel="stylesheet" href="<?= $utils->hashnator("themes/$theme/style.css"); ?>">
     <!-- <script data-ad-client="ca-pub-5310136825481668" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
-    <script type="text/javascript" src="<?php echo $utils->hashnator("js/functions.js"); ?>"></script>
+    <script type="text/javascript" src="<?= $utils->hashnator("js/functions.js"); ?>"></script>
 </head>
 <body>
 <div class="progress loading" id="progress">
@@ -111,11 +112,11 @@
             </div>
         </form>
         <?php } else { ?>
-        <span class="bv-txt text-light">Bem-vindo, <a class="user-a" href="perfil.php?user=<?php echo $currentId; ?>"><?php if ($tipoSelf == 3) { echo $utils->formatAdm($nome_usuario); } else { echo $str = strlen($nome_usuario) > 10 ? substr($nome_usuario, 0, 10)."..." : $nome_usuario; } ?></a></span>
+        <span class="bv-txt text-light">Bem-vindo, <a class="user-a" href="perfil.php?user=<?= $currentId; ?>"><?php if ($tipoSelf == 3) { echo $utils->formatAdm($nome_usuario); } else { echo $str = strlen($nome_usuario) > 10 ? substr($nome_usuario, 0, 10)."..." : $nome_usuario; } ?></a></span>
         <li class="nav-item dropdown unli">
             <a href="#" class="btn nav-link dropdown-toggle text-light btn-outline-light menuDrop" data-toggle="dropdown">Minha conta</a>
             <div class="dropdown-menu dropdown-menu-center dropDown">
-                <a href="perfil.php?user=<?php echo $currentId; ?>" class="dropdown-item dropDown">Meu Perfil</a>
+                <a href="perfil.php?user=<?= $currentId; ?>" class="dropdown-item dropDown">Meu Perfil</a>
                 <a href="configuracoes.php" class="dropdown-item dropDown">Configurações</a>
                 <div class="dropdown-divider"></div>
                 <form action="" method="post">
@@ -131,7 +132,7 @@
         <?php } if ($tipoSelf == 2 || $tipoSelf == 3) { ?>
         <a href="agendas_de_coleta.php" class="btn nav-link e btn-outline-light text-light menuNavButtom">Minhas agendas</a>
         <!-- <a href="#" class="btn nav-link e btn-outline-light text-light menuNavButtom">Gráficos (em breve)</a> -->
-        <!-- <a href="#" class="btn nav-link e btn-outline-light text-light menuNavButtom">Mapa (em breve)</a> -->
+        <a href="mapa_de_coleta.php" class="btn nav-link e btn-outline-light text-light menuNavButtom">Mapa de Coleta</a>
         <?php } if ($tipoSelf == 2 || $tipoSelf == 3) { ?>
         <a href="premium.php" class="btn nav-link e btn-outline-light text-light menuNavButtom">Adquira premium</a>
         <?php } if ($tipoSelf == 0 || $tipoSelf == 1 || $tipoSelf == 3) { ?>
@@ -152,7 +153,7 @@
                     <span></span>
                     <span></span>
                 </button>
-                <a href="index.php" id="logo" class="navbar-brand"><img src="images/logotipo.png" alt="Logotipo" title="<?php echo $nome_site; ?>" class="logo"></a>
+                <a href="index.php" id="logo" class="navbar-brand"><img src="images/logotipo.png" alt="Logotipo" title="<?= $sys_name; ?>" class="logo"></a>
                 <?php if (isset($_SESSION['sessao'])) { ?>
                 <li class="nav-item dropdown notify-list">
                     <button class="btn nav-link text-light btn-outline-light not-bu notify-bu d-inline-block d-lg-none ml-auto bellB" type="button" data-toggle="dropdown" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
