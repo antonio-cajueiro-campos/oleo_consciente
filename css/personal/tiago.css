@@ -11,7 +11,12 @@ p {
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
-    color: rgb(236, 236, 236);
+ /*   color: rgb(236, 236, 236);*/
+}
+
+.banner{
+    height: 100%;
+    width: 100%;
 }
 
 a, a:hover, a:focus {
@@ -193,6 +198,43 @@ a.article, a.article:hover {
     overflow: hidden;
 }
 
+.main-col{
+    padding: 20px;
+}
+
+.main-col p{
+    text-align: justify;
+}
+
+.colText{
+    margin: 0;
+}
+
+.colImgs{
+    margin: 0;
+}
+
+.img-parceiros{
+    height: 180px;
+    width: 180px;
+}
+
+.contentBox h4{
+    font-size: 20px;
+}
+
+.contentBox p{
+    text-align: justify;
+}
+
+/*.ecological p{
+    text-align: justify;
+}
+
+.festa-verde{
+    text-align: justify;
+}*/
+
 #sidebarCollapse {
     width: 40px;
     height: 40px;
@@ -227,10 +269,21 @@ a.article, a.article:hover {
     margin: 5px auto;
 }
 
+.banner-img {
+    width: 100%;
+}
+
 
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 1200px) {
+    .img-parceiros{
+        margin-bottom: 10px;
+    }
+}
+
+
 @media (max-width: 767px) {
     .navbar {
         padding: 7px 10px;

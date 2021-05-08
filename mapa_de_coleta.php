@@ -63,7 +63,7 @@
                             $id = array_search($addressArr, $addressList);
                             $qtd = $descarteObj->consultarWith('quantidade', $id);
                             foreach ($addressList[$id] as $address) {
-                                $tm += 350;
+                                $tm += 370;
                                 $addressLocale = array_search($address, $addressList[$id]);
     
                                 if ($address == "ON") {

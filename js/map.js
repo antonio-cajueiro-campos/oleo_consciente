@@ -8,7 +8,7 @@ document.getElementById("rota-btn").addEventListener("click", event => {
 	event.target.setAttribute("disabled", "disabled");
 });
 
-function criarRota(address = "") {	
+function criarRota(address = "") {
 	setMarkers(address, "Partida & Destino", 0, "images/marker-route.png");
 	var request = {
 		origin: address,

@@ -7,18 +7,16 @@
         <li class="breadcrumb-item active" aria-current="page"><?php echo $nome_pagina;?></li>
     </ol>
 </nav>
-<style>
-.fe {
-    opacity: .8;
-}
-</style>
 <div class="container contentBox">
-    <p class="fe">FELIPE NO PROJETO</p>
+    <section class="about">
+    <h3>Conheça sobre o nosso projeto</h3>
+    <p>Esse projeto surgiu em 2020, como TCC para um curso técnico em Análise e Desenvolvimentos de Sistemas na Etec Dra. Ruth Cardoso. 
+        Inicialmente o foco era auxiliar pequenos coletores de óleo e produtores de sabão caseiro, mas foi adaptado para atender todo mercado de reciclagem 
+        de óleo de cozinha caseiro auxiliando o processo de coleta e incentivando usuários domesticos a adotarem boas práticas em relação ao descarte 
+        de gordura e óleo de fritura usado.
+    </p>
+    </section>
 </div>
-<section class="about">
-    
-</section>
-
 </div>
 <!-- ========== Conteúdo termina aqui ========== -->
 <?php include 'inc/footer.php'?>
