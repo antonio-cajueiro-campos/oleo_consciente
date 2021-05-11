@@ -7,7 +7,7 @@
     
     //System main config
     $sys_name = "Óleo Consciente";
-    $sys_host = "https://antonio.servegame.com";
+    $sys_host = "https://antonio.servegame.com/oil_rescue";
     $sys_email = "contato.oil@rescue.com";
     
     $db_host = "localhost";

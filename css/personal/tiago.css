@@ -217,13 +217,14 @@ a.article, a.article:hover {
 .img-parceiros{
     height: 180px;
     width: 180px;
+    border: 1px #ccc solid;
 }
 
 .contentBox h4{
     font-size: 20px;
 }
 
-.contentBox p{
+.about-page{
     text-align: justify;
 }
 
@@ -272,7 +273,37 @@ a.article, a.article:hover {
 .banner-img {
     width: 100%;
 }
+/* ---------------------------------------------------
+    SOBRE
+----------------------------------------------------- */
 
+.dev-photo{
+    padding: 20px;
+}
+
+.dev-photo img{
+    width: 120px;
+    height: 160px;
+}
+
+.dev-photo p{
+    text-align: center;
+}
+
+.logoS{
+    width: 200px;
+    height: 200px;
+}
+
+.brasao{
+    width: 175px;
+    height: 66px;
+    margin-bottom: 20px;
+}
+
+.about-page{
+    padding-top: 20px;
+}
 
 /* ---------------------------------------------------
     MEDIAQUERIES

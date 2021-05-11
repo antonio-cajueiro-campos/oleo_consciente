@@ -1,6 +1,7 @@
 <?php
 class usuario {
 
+    private $sys_host = "";
     private $ht = "";
     private $lg = "";
     private $pw = "";
@@ -8,6 +9,7 @@ class usuario {
 
     public function __construct() {
         global $system;
+        $this->sys_host = $system->site_address;
         $this->ht = $system->getConnection('ht');
         $this->lg = $system->getConnection('lg');
         $this->pw = $system->getConnection('pw');
@@ -316,11 +318,14 @@ class usuario {
         }
     }
 
-    public function getImage($currentId) {
+    public function getImage($currentId, $api = false) {
         include_once 'class.utils.php';
         $utils = new utils();
-
         $dir = "images/user_photos/$currentId/";
+
+        if ($api)
+        $dir = "../../images/user_photos/$currentId/";
+
         $photo = "unknown";
         if (is_dir($dir)) {
             if ($dh = opendir($dir)) {
@@ -336,7 +341,7 @@ class usuario {
 
         if ($img)
         $img = $utils->hashnator($img);
-
+        $img = str_replace("../../images", "images", $img);
         return $img;
     }
 
@@ -404,6 +409,82 @@ class usuario {
         }
 
         return $reviewList;
+    }
+
+    public function queryByCnpj($cnpj_id) {
+        $mysqli = new mysqli($this->ht, $this->lg, $this->pw, $this->db);
+        $main = new main();
+        
+        $cnpj_id = str_replace(".", "", $cnpj_id);
+        $cnpj_id = str_replace("-", "", $cnpj_id);
+        $cnpj_id = str_replace("/", "", $cnpj_id);
+
+        if (strlen($cnpj_id) != 14 || !is_numeric($cnpj_id)) {
+            $response = ['error' => true, 'status' => 'Invalid CNPJ', 'code' => 500];
+        } else {
+            $sql = "SELECT cd_usuario FROM tb_usuarios WHERE cd_cpf_cnpj = '$cnpj_id'";
+            $query = $mysqli->query($sql);
+            $count = $query->num_rows;
+            if ($count > 0) {
+                $row = $query->fetch_array(MYSQLI_ASSOC);
+                $id = $row['cd_usuario'];
+
+                $sql = "SELECT qt_nivel FROM tb_configs WHERE cd_usuario='$id'";
+                $query = $mysqli->query($sql);
+                $row = $query->fetch_array(MYSQLI_NUM);
+                $level = $row[0];
+
+                $sql = "SELECT nm_usuario FROM tb_usuarios WHERE cd_usuario='$id'";
+                $query = $mysqli->query($sql);
+                $row = $query->fetch_array(MYSQLI_NUM);
+                $name = $row[0];
+
+                $sql = "SELECT dt_criacao FROM tb_usuarios WHERE cd_usuario='$id'";
+                $query = $mysqli->query($sql);
+                $row = $query->fetch_array(MYSQLI_NUM);
+                $member_since = $row[0];
+
+                $sql = "SELECT qt_material FROM tb_configs WHERE cd_usuario='$id'";
+                $query = $mysqli->query($sql);
+                $row = $query->fetch_array(MYSQLI_NUM);
+                $material = $row[0];
+
+                $sql = "SELECT ds_atuacao FROM tb_configs WHERE cd_usuario='$id'";
+                $query = $mysqli->query($sql);
+                $row = $query->fetch_array(MYSQLI_NUM);
+                $operations = $row[0];
+
+                $elo = $this->getElo($id);
+                $cnpj = $cnpj_id;
+                $url = $this->sys_host."/perfil.php?user=".$id;
+                $profile_picture = $this->sys_host."/".$this->getImage($id, true);
+
+                // $operations = [
+                //     'state1' => 'citie',
+                //     'state2' => 'citie',
+                //     'state3' => 'citie',
+                // ];
+
+                $response = [
+                    'error' => false,
+                    'status' => 'OK',
+                    'code' => 200,
+                    'id' => $id,
+                    'name' => $name,
+                    'url' => $url,
+                    'profile_picture' => $profile_picture,
+                    'cnpj' => $cnpj,
+                    'level' => $level,
+                    'elo' => $elo,
+                    'member_since' => $member_since,
+                    'material' => $material,
+                    'operations' => $operations
+                ];
+            } else {
+                $response = ['error' => true, 'status' => 'CNPJ not found', 'code' => 404];
+            }
+        }
+        return json_encode($response, JSON_FORCE_OBJECT);
     }
 
     public function subirDeNivel($newXp = 0, $currentId) {
